@@ -14,6 +14,7 @@ public class ReadAndParse {
         for (int i = index; i < data.length(); ++i) {
             ret += data.charAt(i);
         }
+        //same as ret = data.substring(index)
 
         return ret;
     }
@@ -110,12 +111,19 @@ public class ReadAndParse {
         String pathMarten = "C:/Users/admin/Downloads/Scoring-Beispiel.rtf";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/Scoring-Beispiel.rtf";
         String pathHenriette = "";
-        String pathVincent = "";
-        String path = pathEdgar;                                //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
+        String pathVincent = "C:/UNI/04_Semester/Scoring-Beispiel.rtf";
+        String path = pathVincent;                                //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
         String data = readFile(path);
         int DMcount = countCharTarget(data, 'D');
         int[] RowsAndCol = countRowsAndCol(data);
         double allmatrices[][][] = createMatrices(data, DMcount, RowsAndCol);
+
+        System.out.println(data);
+
+        //replace everything but numbers
+        data = data.replaceAll("(DM|a|c)([0-9]+)|//|,|\\\\|}"," ");
+        data = data.replaceAll("\\s+"," ");
+        System.out.println(data);
 
 //        System.out.println(DMcount);
 //        System.out.println(copyFirst(data));
