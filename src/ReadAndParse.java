@@ -80,20 +80,20 @@ public class ReadAndParse {
         return new int[]{rows, columns};
     }
 
-    private static void matrixToString(int[][][] matrix) {
+    private static void matrixToString(double[][][] matrix) {
 
         System.out.println(Arrays.deepToString(matrix));
     }
 
     //-------- create given number of matrices with given number of columns and rows, with the given data in them
-    private static int[][][] createMatrices(String data, int nrmatrices, int[] RowsAndCols) {
+    private static double[][][] createMatrices(String data, int nrmatrices, int[] RowsAndCols) {
         int nrrows = RowsAndCols[0];
         int nrcols = RowsAndCols[1];
-        int [][][] allmatrices = new int[nrmatrices][nrrows][nrcols];           //matrix, which contains all the matrices of the DM's
+        double [][][] allmatrices = new double[nrmatrices][nrrows][nrcols];           //matrix, which contains all the matrices of the DM's
         for (int i = 0; i < nrmatrices; i++) {
             for (int j = 0; j < nrrows; j++) {
                 for (int k = 0; k < nrcols; k++){
-                    allmatrices[i][j][k] = i+1;
+                    allmatrices[i][j][k] = i+1.1;
                 }
 
             }
@@ -115,7 +115,7 @@ public class ReadAndParse {
         String data = readFile(path);
         int DMcount = countCharTarget(data, 'D');
         int[] RowsAndCol = countRowsAndCol(data);
-        int allmatrices[][][] = createMatrices(data, DMcount, RowsAndCol);
+        double allmatrices[][][] = createMatrices(data, DMcount, RowsAndCol);
 
 //        System.out.println(DMcount);
 //        System.out.println(copyFirst(data));
