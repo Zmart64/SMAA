@@ -114,7 +114,7 @@ public class ReadAndParse {
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/Scoring-Beispiel.rtf";
         String pathHenriette = "";
         String pathVincent = "";
-        String path = pathEdgar;
+        String path = pathMarten;
         String data = readFile(path);
         int DMcount = countCharTarget(data, 'D');
         int[] RowsAndCol = countRowsAndCol(data);
