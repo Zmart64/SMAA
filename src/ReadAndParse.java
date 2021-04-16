@@ -73,11 +73,9 @@ public class ReadAndParse {
 
     //--------read through and count all c's for rows and a's for columns
     private static int[] countRowsAndCol(String data) {
-        int columns = 0;
-        int rows = 0;
         String DM = copyFirst(data);
-        rows = countCharTarget(DM, 'c');
-        columns = countCharTarget(DM, 'a') + 1;
+        int rows = countCharTarget(DM, 'c');
+        int columns = countCharTarget(DM, 'a') + 1;
 
         return new int[]{rows, columns};
     }
@@ -88,11 +86,10 @@ public class ReadAndParse {
     }
 
     //-------- create given number of matrices with given number of columns and rows, with the given data in them
-    private static void createMatrices(String data, int DMcount, int[] RowsAndCols) {
-        int nrmatrices = DMcount;
+    private static int[][][] createMatrices(String data, int nrmatrices, int[] RowsAndCols) {
         int nrrows = RowsAndCols[0];
         int nrcols = RowsAndCols[1];
-        int [][][] allmatrices = new int[nrmatrices][nrrows][nrcols];
+        int [][][] allmatrices = new int[nrmatrices][nrrows][nrcols];           //matrix, which contains all the matrices of the DM's
         for (int i = 0; i < nrmatrices; i++) {
             for (int j = 0; j < nrrows; j++) {
                 for (int k = 0; k < nrcols; k++){
@@ -104,8 +101,8 @@ public class ReadAndParse {
         }
 
         matrixToString(allmatrices);
-        //return array;
 
+        return allmatrices;
     }
 
 
@@ -114,11 +111,11 @@ public class ReadAndParse {
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/Scoring-Beispiel.rtf";
         String pathHenriette = "";
         String pathVincent = "";
-        String path = pathMarten;
+        String path = pathEdgar;                                //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
         String data = readFile(path);
         int DMcount = countCharTarget(data, 'D');
         int[] RowsAndCol = countRowsAndCol(data);
-        createMatrices(data, DMcount, RowsAndCol);
+        int allmatrices[][][] = createMatrices(data, DMcount, RowsAndCol);
 
 //        System.out.println(DMcount);
 //        System.out.println(copyFirst(data));
