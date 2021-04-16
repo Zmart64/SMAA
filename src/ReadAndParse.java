@@ -82,25 +82,29 @@ public class ReadAndParse {
         return new int[]{rows, columns};
     }
 
-    private static void matrixToString(int[][] matrix) {
+    private static void matrixToString(int[][][] matrix) {
+
         System.out.println(Arrays.deepToString(matrix));
     }
 
     //-------- create given number of matrices with given number of columns and rows, with the given data in them
     private static void createMatrices(String data, int DMcount, int[] RowsAndCols) {
-        Object[] matrices = new Object[DMcount];
+        int nrmatrices = DMcount;
+        int nrrows = RowsAndCols[0];
+        int nrcols = RowsAndCols[1];
+        int [][][] allmatrices = new int[nrmatrices][nrrows][nrcols];
+        for (int i = 0; i < nrmatrices; i++) {
+            for (int j = 0; j < nrrows; j++) {
+                for (int k = 0; k < nrcols; k++){
+                    allmatrices[i][j][k] = i+1;
+                }
 
-        // for (int i = 0; i < DMcount; i++) {
-        int[][] matrix = new int[RowsAndCols[0]][RowsAndCols[1]];             //enter first and second entry of countColAndRow-Return-Value --> 0 = number of columns, 1 = number of rows
-        for (int j = 0; j < RowsAndCols[0]; j++) {
-            for (int k = 0; k < RowsAndCols[1]; k++) {
-                matrix[j][k] = 1;
             }
-        }
-        matrixToString(matrix);
-        // matrices[i] = matrix;
-        //}
 
+        }
+
+        matrixToString(allmatrices);
+        //return array;
 
     }
 
@@ -110,7 +114,7 @@ public class ReadAndParse {
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/Scoring-Beispiel.rtf";
         String pathHenriette = "";
         String pathVincent = "";
-        String path = pathMarten;
+        String path = pathEdgar;
         String data = readFile(path);
         int DMcount = countCharTarget(data, 'D');
         int[] RowsAndCol = countRowsAndCol(data);
