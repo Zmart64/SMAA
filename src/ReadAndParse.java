@@ -110,9 +110,9 @@ public class ReadAndParse {
     public static void main(String[] args) {
         String pathMarten = "C:/Users/admin/Downloads/Scoring-Beispiel.rtf";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/Scoring-Beispiel.rtf";
-        String pathHenriette = "";
+        String pathHenriette = "/Users/henriettenimz/Desktop/Softwareprojekt/Scoring-Beispiel.rtf";
         String pathVincent = "C:/UNI/04_Semester/Scoring-Beispiel.rtf";
-        String path = pathVincent;                                //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
+        String path = pathHenriette;                                //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
         String data = readFile(path);
         int DMcount = countCharTarget(data, 'D');
         int[] RowsAndCol = countRowsAndCol(data);
