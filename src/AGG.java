@@ -17,10 +17,10 @@ public class AGG {
     private ArrayList<String> FileToArrayList(String Path){
         /*
             - creates ArrayList of Type String from csv-File:
-                - each entry represents one line
+                - each entry represents one line,startin and ending with ";"
                 - everything but values gets removed
                 - missing values are replaced with -1
-                - example format of one line: 0.4;-1;3;
+                - example format of one line: ;0.4;-1;3;
 
             - initializes dmCount and criteriaCount
         */
@@ -60,11 +60,9 @@ public class AGG {
         for(int i = 0; i < rows.size();i++){
 
             //delete c1 - cn
-            String modified = rows.get(i).replaceAll("c([0-9]+);", "") + ";"; //semicolon at the end simplify following steps
+            String modified = ";" + rows.get(i).replaceAll("c([0-9]+);", "") + ";"; //semicolons simplify following steps
 
             //replace missing values with -1
-            if(Character.toString(modified.charAt(0)).equals(";"))
-                modified = "-1;"+modified.substring(1);
             while(modified.contains(";;")) {
                 modified = modified.replaceFirst(";;", ";-1;");
             }
