@@ -134,7 +134,7 @@ public class ReadAndParse {
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
         String pathHenriette = "";
         String pathVincent = "C:/UNI/04_Semester/Scoring-Beispiel.rtf";
-        String path = pathMarten;                                                                   //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
+        String path = pathMarten;                                                                     //nur für uns, je nachdem, wer gerade ändert, muss den Pfad auf das Scoring Beispiel auf seinem PC setzen
         String dataFirst = copyFirst(path);
 
         int[] rowsAndCols = countRowsAndCols(dataFirst);
