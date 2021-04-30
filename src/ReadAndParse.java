@@ -56,24 +56,35 @@ public class ReadAndParse {
         String target = "DM";
         int counter = 0;
 
-        while (counter <= 1) {
-            if (target == data.charAt(i)) {
-                counter++;
+        StringBuilder data = new StringBuilder();
+
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (counter <= 1 && myReader.hasNextLine()) {
+                String t = myReader.nextLine();
+
+                data.append(t);
+
+                if (t.contains(target)) {
+                    counter++;
+                }
             }
 
-            copy += data.charAt(i);
+            myReader.close();
 
-            i++;
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found! Check input path.");
+            e.printStackTrace();
         }
 
-        return copy;
+        return data.toString();
     }
 
     //--------read through and count all c's for rows and a's for columns
-    private static int[] countRowsAndCol(String data) {
-        String DM = copyFirst(data);
-        int rows = countCharTarget(DM, 'c');
-        int columns = countCharTarget(DM, 'a') + 1;
+    private static int[] countRowsAndCols(String data) {
+        int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
+        int columns = countCharTarget(data, 'a') + 1;
 
         return new int[]{rows, columns};
     }
