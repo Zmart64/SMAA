@@ -117,28 +117,27 @@ public class AGG {
             agg[index[0]][index[1]][0] = randValue; //write random Value into agg
         }
     }
-//
+
     private void calculateRanking(double[][][] agg) {
 
         double[][] ranks = new double[agg[1].length - 1][2];                       //number of alternatives
         double score = 0;
 
         for (int i = 1; i < agg[1].length; i++) {                                  //traverse columns from left to right (starting with 1, because 0 is for weights)
-            for (int j = 0; j < agg[0].length; j++) {                              //traverse rows "downwards"
+            for (int j = 0; j < agg.length; j++) {                                 //traverse rows "downwards"
                 score += agg[j][0][0] * agg[j][i][0];
             }
 
-            ranks[i - 1][0] = i - 1;                                               //score rank with alternative
-            ranks[i - 1][1] = score;
+            ranks[i - 1][0] = i;                                                   //score rank with alternative
+            ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;
             score = 0;                                                             //reset score for next alternative
         }
 
-        Arrays.sort(ranks, Comparator.comparingDouble(o -> o[0]));
+        Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));
 
-        for (int i = 0; i < ranks[0].length; i++) {
-            System.out.println("Alternative: " + ranks[i][0] + ", Score: " + ranks[i][1]);
+        for (int i = 0; i < ranks.length; i++) {
+            System.out.println("Alternative: " + (int) ranks[i][0] + ", Score: " + ranks[i][1]);
         }
-
     }
 
 
@@ -149,7 +148,6 @@ public class AGG {
 
         String path = pathEdgar;
         AGG agg = new AGG(path);
-
     }
 
 }
