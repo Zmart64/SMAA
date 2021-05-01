@@ -97,9 +97,26 @@ public class AGG {
         return modified;
     }
 
-    //    private double generateRandom(){
-//
-//    }
+    /**
+     * generateRandomValues:
+     * generate rand value in interval[min, max] specified by indices in posToRandomizeAt
+     * write generated value into agg
+     **/
+    private void generateRandomValues(){
+
+        for(int[] index : posToRandomizeAt){
+            double min = agg[index[0]][index[1]][1];
+            double max = agg[index[0]][index[1]][2];
+
+            //generate random Value in [min, max]
+            double randValue = min + Math.random()*(max-min);
+            randValue = (double)(Math.round(randValue*10)) / 10;
+
+            assert (randValue >= min && randValue <= max);
+
+            agg[index[0]][index[1]][0] = randValue; //write random Value into agg
+        }
+    }
 //
     private void calculateRanking(double[][][] agg) {
 
