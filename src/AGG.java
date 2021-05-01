@@ -15,6 +15,18 @@ public class AGG {
 
     }
 
+
+    /**
+     * csvToArrayList:
+     * - creates ArrayList of Type String from csv-File:
+     * - each entry represents one line,starting and ending with ";"
+     * - everything but values gets removed
+     * - missing values are replaced with -1
+     * - example format of one line: ;0,4;-1;3;
+     * <p>
+     * - initializes dmCount and criteriaCount
+     **/
+
     private void csvToAGG(String Path) {
         int dmCount = 0;
         int currow = 0;
@@ -40,6 +52,7 @@ public class AGG {
                     }
                 } else if (currentLine.contains("DM")) { //case:DM, ignore
                     dmCount++;
+                    currow = 0;
                 }
                 //else: Gewichte or empty line -> ignore
             }
