@@ -5,13 +5,12 @@ import java.util.Scanner;
 
 public class AGG {
 
-    private int dmCount = 0;
     private int criteriaCount = 0;
     private double[][][] agg;
     private ArrayList<int[]> posToRandomizeAt;
 
     public AGG(String Path) {
-        csvToArrayList(Path);
+        csvToAGG(Path);
 
     }
 
@@ -62,6 +61,39 @@ public class AGG {
             e.printStackTrace();
         }
     }
+
+    private void insertArrayInAGG(double[] doubleArray, int currow) {
+
+
+    }
+
+    private double[] stringToDoubleArray(String modified) {
+        //String[] strArray =
+        double[] doubleArray = null;
+        return doubleArray;
+    }
+
+    private String modifyString(String currentLine) {
+
+            //delete c1 - cn
+            String modified = ";" + currentLine.replaceAll("c([0-9]+);", "") + ";"; //semicolons simplify following steps
+
+            //replace missing values with -1
+            while (modified.contains(";;")) {
+                modified = modified.replaceFirst(";;", ";-1;");
+            }
+
+            return modified;
+    }
+
+//    private double generateRandom(){
+//
+//    }
+//
+//    private void calculateRanking(){
+//
+//    }
+
 
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
