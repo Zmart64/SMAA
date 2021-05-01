@@ -72,7 +72,7 @@ public class AGG {
     //------------gets String of the values as input and converts them to double Array
     private double[] stringToDoubleArray(String modified) {
         modified = modified.replaceFirst(";", "");
-        String[] strArray = modified.split(";");                            //values are seperated by ;
+        String[] strArray = modified.split(";");                            //values are separated by ;
         int length = strArray.length;
         double[] doubleArray = new double[length];
         for (int i = 0; i < length; i++) {
@@ -91,7 +91,7 @@ public class AGG {
                 modified = modified.replaceFirst(";;", ";-1;");
             }
 
-            modified = modified.replace(",", ".");               //doubles with ., not ,
+            modified = modified.replace(",", ".");               //doubles with . not ,
 
             return modified;
     }
