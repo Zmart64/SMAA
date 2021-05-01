@@ -120,11 +120,30 @@ public class ReadAndParse {
             while (myReader.hasNextLine()) {
                 String t = myReader.nextLine();
 
-                if (t.contains("c") && !t.contains("a") && !t.contains("|")) {
-                    System.out.println(t);
+                if (t.contains("c") && !t.contains("a") && !t.contains("|")) {                      //get lines with numbers
+                    System.out.println(t.replaceAll("(c)([0-9]+)(;)", ""));
 
-
-
+//                    for (int i = 0; i < rows; i++) {
+//                        StringBuilder tBuilder = new StringBuilder();                              //use StringBuilder to delete single chars certain indices
+//                        tBuilder.append(t.replaceAll("(c)([0-9]+)(;)", ""));                        //get rid of criteria-name
+//
+//                        for (int j = 0; j < cols; j++) {
+//
+//                            int index = tBuilder.indexOf(";");                                     //identify first ";"
+//                            int deletionCount = 0;
+//
+//                            for (int k = 0; k < index; k++) {
+//                                agg[i][j] += tBuilder.charAt(k) + " | ";                           //add everything until first ";" to agg
+//                                deletionCount++;
+//                                System.err.println(tBuilder);
+//                            }
+//
+//                            for (int k = 0; k <= deletionCount; k++) {
+//                                tBuilder.deleteCharAt(k);                                          //delete anything in line until and including first ";"
+//                                System.err.println("deleted: " + tBuilder);
+//                            }
+//                        }
+//                    }
                 }
             }
 
@@ -151,7 +170,14 @@ public class ReadAndParse {
         int[] rowsAndCols = countRowsAndCols(dataFirst);
         //System.out.println(Arrays.toString(rowsAndCols));
 
-        createAggTable(path, rowsAndCols[0], rowsAndCols[1]);
+        String[][] test = createAggTable(path, rowsAndCols[0], rowsAndCols[1]);
+
+        for (int i = 0; i < rowsAndCols[0]; i++) {
+            for (int j = 0; j < rowsAndCols[1]; j++) {
+                System.out.println(test[i][j]);
+            }
+
+        }
 
 
         //replace everything but numbers
