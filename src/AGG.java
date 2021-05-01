@@ -141,6 +141,31 @@ public class AGG {
 
     }
 
+    private int[][] calculateRAI(int numIterations){
+
+        int[][] raiTable = new int[agg.length-1][agg.length-1];
+        // 1.dimension: Alternative, 2.dimension: possible ranks -> save points / percentage per Rank
+
+
+        //calculate point per alternative per rank
+        for(int i = 0; i < numIterations; i++){
+            generateRandomValues();
+            int[] rankedAlternatives = calculateRanking();
+            for (int rank = rankedAlternatives.length; rank < rankedAlternatives.length; rank++){
+                raiTable[rankedAlternatives[rank]][rank]++;
+            }
+        }
+
+        //calculate RAI
+        for(int a = 0; a < raiTable.length; a++){
+            for(int rank = 0; rank < raiTable.length; rank++){
+                raiTable[a][rank] = raiTable[a][rank] / numIterations;
+            }
+        }
+
+        return raiTable;
+    }
+
 
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
