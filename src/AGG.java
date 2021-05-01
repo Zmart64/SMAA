@@ -131,7 +131,6 @@ public class AGG {
      **/
 
     private void csvToAGG(String Path) {
-        int dmCount = 0;
         int currow = 0;
 
 
