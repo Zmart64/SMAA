@@ -7,11 +7,10 @@ public class AGG {
 
     private int criteriaCount = 0;
     private double[][][] agg;
-    private ArrayList<int[]> posToRandomizeAt;
+    private ArrayList<int[]> posToRandomizeAt=new ArrayList<>();
 
     public AGG(String Path) {
         csvToAGG(Path);
-
     }
 
 
@@ -62,7 +61,37 @@ public class AGG {
         }
     }
 
-    private void insertArrayInAGG(double[] doubleArray, int currow) {
+    private void insertArrayInAGG(double[] doubleArray, int currow) { //agg hat überall -1.0 stehen
+        int[] g=new int[2];
+        for(int i=0;i<doubleArray.length;i++){
+            if(doubleArray[i]==-1.0 && agg[currow][i][1]==-1.0 && agg[currow][i][2]==-1.0){       //if agg hasn't any value and DM didn't give a evaluation
+                agg[currow][i][0]=-5.0; //-5 for random values between 0 an 1
+                agg[currow][i][1]=0.0;
+                agg[currow][i][2]=1.0;
+                g[0]=currow;
+                g[1]=i;
+               posToRandomizeAt.add(g);
+            }else if(agg[currow][i][1]==-1.0 && agg[currow][i][2]==-1.0){ //if agg hasn't any value and a=-1 and b=-1
+                    agg[currow][i][1]=doubleArray[i];
+                    agg[currow][i][2]=doubleArray[i];
+
+                }else if(doubleArray[i]<agg[currow][i][1] || agg[currow][i][1]==-1.0 || (agg[currow][i][0]==-5.0 && agg[currow][i][0]==0)){
+                    agg[currow][i][1]=doubleArray[i]; //wenn dm bewertung gegeben hat die kleiner ist als vorheriger wert oder falls vorher noch kein wert abgegeben wurde
+
+                }else if(doubleArray[i]>agg[currow][i][2] ||(agg[currow][i][0]==-5.0 && agg[currow][i][0]==1.0) ){
+                    agg[currow][i][2]=doubleArray[i];
+                }
+                if(agg[currow][i][1] != agg[currow][i][2]){ //if first and second value are not the same position 0 has the value -10
+                    agg[currow][i][0]=-10.0;
+                    g[0]=currow;
+                    g[1]=i;
+                    posToRandomizeAt.add(g);
+                }
+                if(agg[currow][i][1] == agg[currow][i][2]){//if first and second value are the same put the value at position 0
+                    agg[currow][i][0]=agg[currow][i][1];
+            }
+
+        }
 
 
     }
@@ -94,11 +123,9 @@ public class AGG {
 //
 //    }
 
-
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
         String pathMarten = "C:/Users/admin/Downloads/my-swp-example.csv";
-
         String path = pathMarten;
         AGG agg = new AGG(path);
 
