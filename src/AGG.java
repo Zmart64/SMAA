@@ -72,7 +72,7 @@ public class AGG {
     //------------gets String of the values as input and converts them to double Array
     private double[] stringToDoubleArray(String modified) {
         modified = modified.replaceFirst(";", "");
-        String[] strArray = modified.split(";");                            //values are separated by ;
+        String[] strArray = modified.split(";");                            //values are seperated by ;
         int length = strArray.length;
         double[] doubleArray = new double[length];
         for (int i = 0; i < length; i++) {
@@ -91,14 +91,34 @@ public class AGG {
                 modified = modified.replaceFirst(";;", ";-1;");
             }
 
-            modified = modified.replace(",", ".");               //doubles with . not ,
+            modified = modified.replace(",", ".");               //doubles with ., not ,
 
             return modified;
     }
 
-//    private double generateRandom(){
-//
-//    }
+
+
+
+    /**
+     * generateRandomValues:
+     * generate rand value in interval[min, max] specified by indices in posToRandomizeAt
+     * write generated value into agg
+     **/
+       private void generateRandomValues(){
+
+        for(int[] index : posToRandomizeAt){
+            double min = agg[index[0]][index[1]][1];
+            double max = agg[index[0]][index[1]][2];
+
+            //generate random Value in [min, max]
+            double randValue = min + Math.random()*(max-min);
+            randValue = (double)(Math.round(randValue*10)) / 10;
+
+            assert (randValue >= min && randValue <= max);
+
+            agg[index[0]][index[1]][0] = randValue; //write random Value into agg
+        }
+        }
 //
 //    private void calculateRanking(){
 //
