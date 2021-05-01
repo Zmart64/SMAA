@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class AGG {
 
-    private int criteriaCount = 0;
     private double[][][] agg;
     private ArrayList<int[]> posToRandomizeAt = new ArrayList<>();
 
@@ -46,7 +45,9 @@ public class AGG {
 
         System.out.println("AGG_Table: ");
         System.out.println(Arrays.deepToString(agg));
-        System.out.println("agg.length" + " reihen    " + "agg[1].length" + " spalten" );
+
+        System.out.println(Arrays.deepToString(posToRandomizeAt.toArray()));
+
 
         double[][] raiTable = calculateRAI(1000);
         System.out.println("RAI-Table: ");
@@ -151,9 +152,6 @@ public class AGG {
 
                     currow++;
 
-                    if (dmCount == 1) {//only count Criteria for first DM
-                        criteriaCount++;
-                    }
                 } else if (currentLine.contains("DM")) { //case:DM, ignore
                     currow = 0;
                 }
@@ -278,9 +276,9 @@ public class AGG {
         return retRanks;
     }
 
-    private int[][] calculateRAI(int numIterations){
+    private double[][] calculateRAI(int numIterations) {
 
-        int[][] raiTable = new int[agg.length-1][agg.length-1];
+        double[][] raiTable = new double[agg[1].length - 1][agg[1].length - 1];
         // 1.dimension: Alternative, 2.dimension: possible ranks -> save points / percentage per Rank
 
         //calculate point per alternative per rank
@@ -310,6 +308,7 @@ public class AGG {
 
         String path = pathMarten;
         AGG agg = new AGG(path);
+
     }
 
 }
