@@ -7,10 +7,9 @@ import java.util.Scanner;
 public class AGG {
 
     private double[][][] agg;
-    private ArrayList<int[]> posToRandomizeAt = new ArrayList<>();
+    private ArrayList<int[]> positionsToRandomizeAt = new ArrayList<>();
 
     public AGG(String Path) {
-
 
 //        agg = new double[3][3][3];
 //        agg[0][0][0] = 0.4;
@@ -35,10 +34,9 @@ public class AGG {
 //        agg[2][0][1] = 0.1;
 //        agg[2][0][2] = 0.2;
 
-
         String firstDM = copyFirst(Path);
         int[] dimensions = countRowsAndCols(firstDM);
-        System.out.println(dimensions[0] + " dimensions " + dimensions[1]);
+        System.out.println("dimensions: rows: "+ dimensions[0] + "cols: " + dimensions[1]);
         initializeAGG(dimensions[0], dimensions[1]);
 
         csvToAGG(Path);
@@ -46,13 +44,20 @@ public class AGG {
         System.out.println("AGG_Table: ");
         System.out.println(Arrays.deepToString(agg));
 
-        System.out.println(Arrays.deepToString(posToRandomizeAt.toArray()));
+        initPositionsToRandomizeAt();
+
+        System.out.println("positionsToRandomizeAt: ");
+        System.out.println(Arrays.deepToString(positionsToRandomizeAt.toArray()));
+
+    }
 
 
-        double[][] raiTable = calculateRAI(1000);
-        System.out.println("RAI-Table: ");
-        System.out.println(Arrays.deepToString(raiTable));
+    //--------read through and count all c's for rows and a's for columns
+    private static int[] countRowsAndCols(String data) {
+        int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
+        int columns = countCharTarget(data, 'a') + 1;
 
+        return new int[]{rows, columns};
     }
 
     //--------Copy first DMEntry, to count Rows and Columns
@@ -86,19 +91,6 @@ public class AGG {
         return data.toString();
     }
 
-    private void initializeAGG(int rows, int cols) {
-
-        agg = new double[rows][cols][3];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                for (int k = 0; k < 3; k++) {
-                    agg[i][j][k] = -1.0;
-                }
-            }
-        }
-    }
-
     //--------count occurrence of target
     private static int countCharTarget(String data, char target) {
         int counter = 0;
@@ -112,12 +104,19 @@ public class AGG {
         return counter;
     }
 
-    //--------read through and count all c's for rows and a's for columns
-    private static int[] countRowsAndCols(String data) {
-        int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
-        int columns = countCharTarget(data, 'a') + 1;
 
-        return new int[]{rows, columns};
+
+    private void initializeAGG(int rows, int cols) {
+
+        agg = new double[rows][cols][3];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < 3; k++) {
+                    agg[i][j][k] = -1.0;
+                }
+            }
+        }
     }
 
     /**
@@ -130,7 +129,6 @@ public class AGG {
      * <p>
      * - initializes dmCount and criteriaCount
      **/
-
     private void csvToAGG(String Path) {
         int currow = 0;
 
@@ -147,7 +145,7 @@ public class AGG {
 
                     String modified = modifyString(currentLine);
                     double[] doubleArray = stringToDoubleArray(modified);
-                    System.out.println(Arrays.toString(doubleArray));
+                    //System.out.println(Arrays.toString(doubleArray));
                     insertArrayInAGG(doubleArray, currow);
 
                     currow++;
@@ -162,50 +160,6 @@ public class AGG {
             System.out.println("File not found! Check input path.");
             e.printStackTrace();
         }
-    }
-
-    private void insertArrayInAGG(double[] doubleArray, int currow) {                                                       //agg hat überall -1.0 stehen
-        int[] g = new int[2];
-        for (int i = 0; i < doubleArray.length; i++) {
-            if (doubleArray[i] == -1.0 && agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                         //if agg hasn't any value and DM didn't give a evaluation
-                agg[currow][i][0] = -5.0;                                                                                   //-5 for random values between 0 an 1
-                agg[currow][i][1] = 0.0;
-                agg[currow][i][2] = 1.0;
-                g[0] = currow;
-                g[1] = i;
-                posToRandomizeAt.add(g);
-            } else if (agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                                            //if agg hasn't any value and a=-1 and b=-1
-                agg[currow][i][1] = doubleArray[i];
-                agg[currow][i][2] = doubleArray[i];
-
-            } else if (doubleArray[i] < agg[currow][i][1] || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0)) {
-                agg[currow][i][1] = doubleArray[i];                                                                         //wenn dm bewertung gegeben hat die kleiner ist als vorheriger wert oder falls vorher noch kein wert abgegeben wurde
-
-            } else if (doubleArray[i] > agg[currow][i][2] || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 1.0)) {
-                agg[currow][i][2] = doubleArray[i];
-            }
-            if (agg[currow][i][1] != agg[currow][i][2]) {                                                                   //if first and second value are not the same position 0 has the value -10
-                agg[currow][i][0] = -10.0;
-                g[0] = currow;
-                g[1] = i;
-                posToRandomizeAt.add(g);
-            }
-            if (agg[currow][i][1] == agg[currow][i][2]) {                                                                   //if first and second value are the same put the value at position 0
-                agg[currow][i][0] = agg[currow][i][1];
-            }
-        }
-    }
-
-    //------------gets String of the values as input and converts them to double Array
-    private double[] stringToDoubleArray(String modified) {
-        modified = modified.replaceFirst(";", "");
-        String[] strArray = modified.split(";");                            //values are seperated by ;
-        int length = strArray.length;
-        double[] doubleArray = new double[length];
-        for (int i = 0; i < length; i++) {
-            doubleArray[i] = Double.parseDouble(strArray[i]);                       //parse String to double Array
-        }
-        return doubleArray;
     }
 
     private String modifyString(String currentLine) {
@@ -223,58 +177,61 @@ public class AGG {
         return modified;
     }
 
-    /**
-     * generateRandomValues:
-     * generate rand value in interval[min, max] specified by indices in posToRandomizeAt
-     * write generated value into agg
-     **/
-    private void generateRandomValues() {
-
-        for (int[] index : posToRandomizeAt) {
-            double min = agg[index[0]][index[1]][1];
-            double max = agg[index[0]][index[1]][2];
-
-            //generate random Value in [min, max]
-            double randValue = min + Math.random() * (max - min);
-            randValue = (double) (Math.round(randValue * 10)) / 10;
-
-            assert (randValue >= min && randValue <= max);
-
-            agg[index[0]][index[1]][0] = randValue; //write random Value into agg
+    //------------gets String of the values as input and converts them to double Array
+    private double[] stringToDoubleArray(String modified) {
+        modified = modified.replaceFirst(";", "");
+        String[] strArray = modified.split(";");                            //values are seperated by ;
+        int length = strArray.length;
+        double[] doubleArray = new double[length];
+        for (int i = 0; i < length; i++) {
+            doubleArray[i] = Double.parseDouble(strArray[i]);                       //parse String to double Array
         }
+        return doubleArray;
     }
 
-    private int[] calculateRanking() {
+    private void insertArrayInAGG(double[] doubleArray, int currow) {                                                       //agg hat überall -1.0 stehen
 
-        double[][] ranks = new double[agg[1].length - 1][2];                                            //number of alternatives
-        double score = 0;
+        for (int i = 0; i < doubleArray.length; i++) {
+            if (doubleArray[i] == -1.0 && agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                         //if agg hasn't any value and DM didn't give a evaluation
+                agg[currow][i][0] = -5.0;                                                                                   //-5 for random values between 0 an 1
+                agg[currow][i][1] = 0.0;
+                agg[currow][i][2] = 1.0;
+            } else if (agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                                            //if agg hasn't any value and a=-1 and b=-1
+                agg[currow][i][1] = doubleArray[i];
+                agg[currow][i][2] = doubleArray[i];
 
-        for (int i = 1; i < agg[1].length; i++) {                                                       //traverse columns from left to right (starting with 1, because 0 is for weights)
-            for (int j = 0; j < agg.length; j++) {                                                      //traverse rows "downwards"
-                score += agg[j][0][0] * agg[j][i][0];
+            } else if (doubleArray[i] < agg[currow][i][1] || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0)) {
+                agg[currow][i][1] = doubleArray[i];                                                                         //wenn dm bewertung gegeben hat die kleiner ist als vorheriger wert oder falls vorher noch kein wert abgegeben wurde
+
+            } else if (doubleArray[i] > agg[currow][i][2] || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 1.0)) {
+                agg[currow][i][2] = doubleArray[i];
             }
-
-            ranks[i - 1][0] = i - 1;                                                                    //score rank with alternative
-            ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;                                      //round score up to two decimal points
-            score = 0;                                                                                  //reset score for next alternative
+            if (agg[currow][i][1] != agg[currow][i][2]) {                                                                   //if first and second value are not the same position 0 has the value -10
+                agg[currow][i][0] = -10.0;
+            }
+            if (agg[currow][i][1] == agg[currow][i][2]) {                                                                   //if first and second value are the same put the value at position 0
+                agg[currow][i][0] = agg[currow][i][1];
+            }
         }
-
-        Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));                                   //sort for alternatives with highest score (descending)
-
-        for (int i = 0; i < ranks.length; i++) {                                                        //print sorted alternatives with score
-            System.out.println("Alternative: " + (int) ranks[i][0] + ", Score: " + ranks[i][1]);
-        }
-
-        int[] retRanks = new int[ranks.length];
-
-        for (int i = 0; i < ranks.length; i++) {
-            retRanks[i] = (int) ranks[i][0];
-        }
-
-        System.err.println(Arrays.toString(retRanks));
-
-        return retRanks;
     }
+
+    private void initPositionsToRandomizeAt() {
+
+        int[] index;
+
+        for (int i = 0; i < agg.length; i++) {
+            for (int j = 0; j < agg[0].length; j++) {
+                if (agg[i][j][0] == -10) {
+                    index = new int[2];
+                    index[0] = i;
+                    index[1] = j;
+                    positionsToRandomizeAt.add(index);
+                }
+            }
+        }
+    }
+
+
 
     private double[][] calculateRAI(int numIterations) {
 
@@ -300,14 +257,73 @@ public class AGG {
         return raiTable;
     }
 
+    private int[] calculateRanking() {
+
+        double[][] ranks = new double[agg[1].length - 1][2];                                            //number of alternatives
+        double score = 0;
+
+        for (int i = 1; i < agg[1].length; i++) {                                                       //traverse columns from left to right (starting with 1, because 0 is for weights)
+            for (int j = 0; j < agg.length; j++) {                                                      //traverse rows "downwards"
+                score += agg[j][0][0] * agg[j][i][0];
+            }
+
+            ranks[i - 1][0] = i - 1;                                                                    //score rank with alternative
+            ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;                                      //round score up to two decimal points
+            score = 0;                                                                                  //reset score for next alternative
+        }
+
+        Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));                                   //sort for alternatives with highest score (descending)
+
+//        for (int i = 0; i < ranks.length; i++) {                                                        //print sorted alternatives with score
+//            System.out.println("Alternative: " + (int) ranks[i][0] + ", Score: " + ranks[i][1]);
+//        }
+
+        int[] retRanks = new int[ranks.length];
+
+        for (int i = 0; i < ranks.length; i++) {
+            retRanks[i] = (int) ranks[i][0];
+        }
+
+//        System.err.println(Arrays.toString(retRanks));
+
+        return retRanks;
+    }
+
+
+    /**
+     * generateRandomValues:
+     * generate rand value in interval[min, max] specified by indices in positionsToRandomizeAt
+     * write generated value into agg
+     **/
+    private void generateRandomValues() {
+
+        for (int[] index : positionsToRandomizeAt) {
+            double min = agg[index[0]][index[1]][1];
+            double max = agg[index[0]][index[1]][2];
+
+            //generate random Value in [min, max]
+            double randValue = min + Math.random() * (max - min);
+            randValue = (double) (Math.round(randValue * 10)) / 10;
+
+            assert (randValue >= min && randValue <= max);
+
+            agg[index[0]][index[1]][0] = randValue; //write random Value into agg
+        }
+    }
+
+
 
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
         String pathMarten = "C:/Users/admin/Downloads/ex_missing_values.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathMarten;
+        String path = pathVincent;
         AGG agg = new AGG(path);
+
+        double[][] raiTable = agg.calculateRAI(1000);
+        System.out.println("RAI-Table: ");
+        System.out.println(Arrays.deepToString(raiTable));
 
     }
 
