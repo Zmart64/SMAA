@@ -69,13 +69,14 @@ public class AGG {
 
     }
 
+    //------------gets String of the values as input and converts them to double Array
     private double[] stringToDoubleArray(String modified) {
         modified = modified.replaceFirst(";", "");
-        String[] strArray = modified.split(";");
+        String[] strArray = modified.split(";");                            //values are seperated by ;
         int length = strArray.length;
         double[] doubleArray = new double[length];
         for (int i = 0; i < length; i++) {
-            doubleArray[i] = Double.parseDouble(strArray[i]);
+            doubleArray[i] = Double.parseDouble(strArray[i]);                       //parse String to double Array
         }
         return doubleArray;
     }
