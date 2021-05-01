@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class AGG {
@@ -84,45 +83,26 @@ public class AGG {
 
     private String modifyString(String currentLine) {
 
-        //delete c1 - cn
-        String modified = ";" + currentLine.replaceAll("c([0-9]+);", "") + ";"; //semicolons simplify following steps
+            //delete c1 - cn
+            String modified = ";" + currentLine.replaceAll("c([0-9]+);", "") + ";"; //semicolons simplify following steps
 
-        //replace missing values with -1
-        while (modified.contains(";;")) {
-            modified = modified.replaceFirst(";;", ";-1;");
-        }
+            //replace missing values with -1
+            while (modified.contains(";;")) {
+                modified = modified.replaceFirst(";;", ";-1;");
+            }
 
-        modified = modified.replace(",", ".");               //doubles with ., not ,
+            modified = modified.replace(",", ".");               //doubles with ., not ,
 
-        return modified;
+            return modified;
     }
 
 //    private double generateRandom(){
 //
 //    }
-
-    private void calculateRanking(double[][][] agg) {
-
-        double[][] ranks = new double[agg[1].length - 1][2];                       //number of alternatives
-        double score = 0;
-
-        for (int i = 1; i < agg[1].length; i++) {                                  //traverse columns from left to right (starting with 1, because 0 is for weights)
-            for (int j = 0; j < agg[0].length; j++) {                              //traverse rows "downwards"
-                score += agg[j][0][0] * agg[j][i][0];
-            }
-
-            ranks[i-1][0] = i-1;                                                   //score rank with alternative
-            ranks[i-1][1] = score;
-            score = 0;                                                             //reset score for next alternative
-        }
-
-        Arrays.sort(ranks, Comparator.comparingDouble(o -> o[0]));
-
-        for (int i = 0; i < ranks[0].length; i++) {
-            System.out.println("Alternative: " + ranks[i][0] + ", Score: " +  ranks[i][1]);
-        }
-
-    }
+//
+//    private void calculateRanking(){
+//
+//    }
 
 
     public static void main(String[] args) {
