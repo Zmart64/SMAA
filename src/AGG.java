@@ -12,8 +12,35 @@ public class AGG {
     private ArrayList<int[]> posToRandomizeAt;
 
     public AGG(String Path) {
-        csvToAGG(Path);
+       // csvToAGG(Path);
 
+        agg = new double[3][3][3];
+        agg[0][0][0] = 0.4;
+        agg[1][0][0] = 0.5;
+        agg[2][0][0] = 0.2;
+        agg[0][1][0] = 0.6;
+        agg[1][1][0] = 0.3;
+        agg[0][2][0] = 0.2;
+        agg[2][2][0] = 0.2;
+        agg[1][2][0] = 0.8;
+        agg[2][1][0] = 0.8;
+        agg[0][0][1] = 0.4;
+        agg[0][0][2] = 0.7;
+        agg[0][1][1] = 0.2;
+        agg[0][1][2] = 0.8;
+        agg[1][1][1] = 0.3;
+        agg[1][1][2] = 0.4;
+        agg[1][0][1] = 0.1;
+        agg[1][0][2] = 0.2;
+        agg[2][1][1] = 0.3;
+        agg[2][1][2] = 0.4;
+        agg[2][0][1] = 0.1;
+        agg[2][0][2] = 0.2;
+
+        System.out.println(Arrays.deepToString(agg));
+        System.out.println("agg.length" + " reihen    " + "agg[1].length" + " spalten" );
+
+        calculateRanking(agg);
     }
 
 
@@ -146,7 +173,7 @@ public class AGG {
         String pathMarten = "C:/Users/admin/Downloads/my-swp-example.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathEdgar;
+        String path = pathMarten;
         AGG agg = new AGG(path);
     }
 
