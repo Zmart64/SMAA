@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class AGG {
@@ -44,6 +45,7 @@ public class AGG {
 
                     String modified = modifyString(currentLine);
                     double[] doubleArray = stringToDoubleArray(modified);
+                    System.out.println(Arrays.toString(doubleArray));
                     insertArrayInAGG(doubleArray, currow);
 
                     if (dmCount == 1) {//only count Criteria for first DM
@@ -68,8 +70,13 @@ public class AGG {
     }
 
     private double[] stringToDoubleArray(String modified) {
-        //String[] strArray =
-        double[] doubleArray = null;
+        modified = modified.replaceFirst(";", "");
+        String[] strArray = modified.split(";");
+        int length = strArray.length;
+        double[] doubleArray = new double[length];
+        for (int i = 0; i < length; i++) {
+            doubleArray[i] = Double.parseDouble(strArray[i]);
+        }
         return doubleArray;
     }
 
@@ -82,6 +89,8 @@ public class AGG {
             while (modified.contains(";;")) {
                 modified = modified.replaceFirst(";;", ";-1;");
             }
+
+            modified = modified.replace(",", ".");               //doubles with ., not ,
 
             return modified;
     }
@@ -98,8 +107,9 @@ public class AGG {
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
         String pathMarten = "C:/Users/admin/Downloads/my-swp-example.csv";
+        String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathMarten;
+        String path = pathEdgar;
         AGG agg = new AGG(path);
 
     }
