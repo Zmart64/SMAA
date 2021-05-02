@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -36,13 +35,17 @@ public class AGG {
 
         String firstDM = copyFirst(Path);
         int[] dimensions = countRowsAndCols(firstDM);
-        System.out.println("dimensions: rows: "+ dimensions[0] + "cols: " + dimensions[1]);
-        initializeAGG(dimensions[0], dimensions[1]);
+        System.out.println("dimensions: rows: " + dimensions[0] + "cols: " + dimensions[1]);
+        //initializeAGG(dimensions[0], dimensions[1]);
+        initializeAGG2(dimensions[0], dimensions[1]);
 
         csvToAGG(Path);
 
         System.out.println("AGG_Table: ");
-        System.out.println(Arrays.deepToString(agg));
+        //System.out.println(Arrays.deepToString(agg));
+        for (double[][] doubles : agg) {
+            System.out.println(Arrays.deepToString(doubles));
+        }
 
         initPositionsToRandomizeAt();
 
@@ -105,7 +108,6 @@ public class AGG {
     }
 
 
-
     private void initializeAGG(int rows, int cols) {
 
         agg = new double[rows][cols][3];
@@ -119,15 +121,22 @@ public class AGG {
         }
     }
 
+    private void initializeAGG2(int rows, int cols) {
+
+        agg = new double[rows][cols][3];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                agg[i][j][0] = -10.0;
+                agg[i][j][1] = 0.0;
+                agg[i][j][2] = 1.0;
+
+            }
+        }
+    }
+
     /**
-     * csvToArrayList:
-     * - creates ArrayList of Type String from csv-File:
-     * - each entry represents one line,starting and ending with ";"
-     * - everything but values gets removed
-     * - missing values are replaced with -1
-     * - example format of one line: ;0,4;-1;3;
-     * <p>
-     * - initializes dmCount and criteriaCount
+     * creates agg, defines positionsToRandomizeAt
      **/
     private void csvToAGG(String Path) {
         int currow = 0;
@@ -146,7 +155,9 @@ public class AGG {
                     String modified = modifyString(currentLine);
                     double[] doubleArray = stringToDoubleArray(modified);
                     //System.out.println(Arrays.toString(doubleArray));
-                    insertArrayInAGG(doubleArray, currow);
+                    //insertArrayInAGG(doubleArray, currow);
+                    /**!!!!!!!!!!!**/
+                    insertArrayInAGG2(doubleArray, currow);
 
                     currow++;
 
@@ -189,9 +200,48 @@ public class AGG {
         return doubleArray;
     }
 
+    /**
+     * alternative that should work, needs other agg init!, used in csvToAGG
+     **/
+    private void insertArrayInAGG2(double[] values, int rowIndex) {
+        // -10 = no value, 10 = multiple values, other = one value
+        for (int i = 0; i < values.length; i++) {
+
+            double currValue = values[i];
+
+            //-1 = missing value, is ignored
+            if (currValue == -1.0)
+                continue;
+
+            //case: no value yet
+            if (agg[rowIndex][i][0] == -10.0) {
+                agg[rowIndex][i][0] = currValue;
+            }
+            //case: insert in existing Interval
+            else if (agg[rowIndex][i][0] == 10.0) {
+                if (currValue < agg[rowIndex][i][1])
+                    agg[rowIndex][i][1] = currValue;
+                if (currValue > agg[rowIndex][i][2])
+                    agg[rowIndex][i][2] = currValue;
+            } else {
+                //case: one value so far -> new Interval if different
+                if (currValue > agg[rowIndex][i][0]) {
+                    agg[rowIndex][i][1] = agg[rowIndex][i][0];
+                    agg[rowIndex][i][2] = currValue;
+                    agg[rowIndex][i][0] = 10;
+                } else if (currValue < agg[rowIndex][i][0]) {
+                    agg[rowIndex][i][1] = currValue;
+                    agg[rowIndex][i][2] = agg[rowIndex][i][0];
+                    agg[rowIndex][i][0] = 10;
+                }
+            }
+        }
+    }
+
     private void insertArrayInAGG(double[] doubleArray, int currow) {                                                       //agg hat überall -1.0 stehen
 
         for (int i = 0; i < doubleArray.length; i++) {
+
             if (doubleArray[i] == -1.0 && agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                         //if agg hasn't any value and DM didn't give a evaluation
                 agg[currow][i][0] = -5.0;                                                                                   //-5 for random values between 0 an 1
                 agg[currow][i][1] = 0.0;
@@ -212,6 +262,7 @@ public class AGG {
             if (agg[currow][i][1] == agg[currow][i][2]) {                                                                   //if first and second value are the same put the value at position 0
                 agg[currow][i][0] = agg[currow][i][1];
             }
+
         }
     }
 
@@ -221,7 +272,7 @@ public class AGG {
 
         for (int i = 0; i < agg.length; i++) {
             for (int j = 0; j < agg[0].length; j++) {
-                if (agg[i][j][0] == -10) {
+                if (agg[i][j][0] == -10 || agg[i][j][0] == 10) { //10 only when using new insert method!!!
                     index = new int[2];
                     index[0] = i;
                     index[1] = j;
@@ -230,7 +281,6 @@ public class AGG {
             }
         }
     }
-
 
 
     private double[][] calculateRAI(int numIterations) {
@@ -247,10 +297,10 @@ public class AGG {
             }
         }
 
-        //calculate RAI
+        //calculate RAI (in %, 2 decimals after comma)
         for (int a = 0; a < raiTable.length; a++) {
             for (int rank = 0; rank < raiTable.length; rank++) {
-                raiTable[a][rank] = raiTable[a][rank] / numIterations;
+                raiTable[a][rank] = Math.round(raiTable[a][rank] / numIterations * 100 * 100) / 100.0;
             }
         }
 
@@ -289,7 +339,6 @@ public class AGG {
         return retRanks;
     }
 
-
     /**
      * generateRandomValues:
      * generate rand value in interval[min, max] specified by indices in positionsToRandomizeAt
@@ -312,6 +361,44 @@ public class AGG {
     }
 
 
+    /**
+     * generates new csv file "output.csv" and writes rai values into it
+     **/
+    public static void raiTableToCSV(double[][] array) {
+
+        try {
+            FileWriter file = new FileWriter("output.csv");//creates new file
+            PrintWriter writer = new PrintWriter(file);
+
+            writer.println("Calculated RAIs: ");
+            writer.println();
+
+            //first row
+            writer.print("Rank;");
+            for (int i = 0; i < array[0].length; i++) {
+                if (i < array[0].length - 1)
+                    writer.print("a" + (i + 1) + ";");
+                else
+                    writer.print("a" + (i + 1));
+            }
+
+            //print all rai values per rank
+            for (int i = 0; i < array[0].length; i++) {
+                writer.println();
+                writer.print(i + 1 + ";");
+                for (int k = 0; k < array.length; k++) {
+                    if (k < array.length - 1)
+                        writer.print(String.valueOf(array[i][k]).replace(".", ",") + ";");
+                    else
+                        writer.print(String.valueOf(array[i][k]).replace(".", ","));
+                }
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
@@ -321,10 +408,12 @@ public class AGG {
         String path = pathVincent;
         AGG agg = new AGG(path);
 
-        double[][] raiTable = agg.calculateRAI(1000);
+        double[][] raiTable = agg.calculateRAI(100000);
         System.out.println("RAI-Table: ");
         System.out.println(Arrays.deepToString(raiTable));
 
+
+        raiTableToCSV(raiTable);
     }
 
 }
