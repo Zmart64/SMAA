@@ -200,7 +200,7 @@ public class AGG {
                 agg[currow][i][1] = doubleArray[i];
                 agg[currow][i][2] = doubleArray[i];
 
-            } else if (doubleArray[i] < agg[currow][i][1] || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0)) {
+            } else if ((doubleArray[i] < agg[currow][i][1] && doubleArray[i] != -1.0) || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0)) {          //Fehler mit dem oder (fügt -1 ein, obwohl vorher schon was drin stand (vorheriger Wert wird überschrieben) ("behoben")
                 agg[currow][i][1] = doubleArray[i];                                                                         //wenn dm bewertung gegeben hat die kleiner ist als vorheriger wert oder falls vorher noch kein wert abgegeben wurde
 
             } else if (doubleArray[i] > agg[currow][i][2] || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 1.0)) {
@@ -230,8 +230,6 @@ public class AGG {
             }
         }
     }
-
-
 
     private double[][] calculateRAI(int numIterations) {
 
@@ -274,17 +272,11 @@ public class AGG {
 
         Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));                                   //sort for alternatives with highest score (descending)
 
-//        for (int i = 0; i < ranks.length; i++) {                                                        //print sorted alternatives with score
-//            System.out.println("Alternative: " + (int) ranks[i][0] + ", Score: " + ranks[i][1]);
-//        }
-
         int[] retRanks = new int[ranks.length];
 
         for (int i = 0; i < ranks.length; i++) {
             retRanks[i] = (int) ranks[i][0];
         }
-
-//        System.err.println(Arrays.toString(retRanks));
 
         return retRanks;
     }
@@ -318,7 +310,7 @@ public class AGG {
         String pathMarten = "C:/Users/admin/Downloads/ex_missing_values.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathVincent;
+        String path = pathMarten;
         AGG agg = new AGG(path);
 
         double[][] raiTable = agg.calculateRAI(1000);
