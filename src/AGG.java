@@ -146,7 +146,7 @@ public class AGG {
                     String modified = modifyString(currentLine);
                     double[] doubleArray = stringToDoubleArray(modified);
                     //System.out.println(Arrays.toString(doubleArray));
-                    insertArrayInAGG(doubleArray, currow);
+                    insertArrayInAgg(doubleArray, currow);
 
                     currow++;
 
@@ -189,7 +189,7 @@ public class AGG {
         return doubleArray;
     }
 
-    private void insertArrayInAGG(double[] doubleArray, int currow) {                                                       //agg hat überall -1.0 stehen
+    private void insertArrayInAgg(double[] doubleArray, int currow) {                                                       //agg hat überall -1.0 stehen
 
         for (int i = 0; i < doubleArray.length; i++) {
             if (doubleArray[i] == -1.0 && agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                         //if agg hasn't any value and DM didn't give a evaluation
@@ -200,10 +200,10 @@ public class AGG {
                 agg[currow][i][1] = doubleArray[i];
                 agg[currow][i][2] = doubleArray[i];
 
-            } else if ((doubleArray[i] < agg[currow][i][1] && doubleArray[i] != -1.0) || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0)) {          //Fehler mit dem oder (fügt -1 ein, obwohl vorher schon was drin stand (vorheriger Wert wird überschrieben) ("behoben")
+            } else if ((doubleArray[i] < agg[currow][i][1] && doubleArray[i] != -1.0) || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0) || (doubleArray[i] > agg[currow][i][1] && agg[currow][i][1] == 0)) {          //Fehler mit dem oder (fügt -1 ein, obwohl vorher schon was drin stand (vorheriger Wert wird überschrieben) ("behoben") + untere Grenze wird nicht eingefügt
                 agg[currow][i][1] = doubleArray[i];                                                                         //wenn dm bewertung gegeben hat die kleiner ist als vorheriger wert oder falls vorher noch kein wert abgegeben wurde
 
-            } else if (doubleArray[i] > agg[currow][i][2] || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 1.0)) {
+            } else if (doubleArray[i] > agg[currow][i][2] || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 1.0)) {     //Fehler - wenn keine Werte drin stehen, aber neue hinzugefügt werden sollen, kann nicht unterschieden werden, ob die vorherige Obergrenze 1 war oder nur 1 als default gesetzt wurde
                 agg[currow][i][2] = doubleArray[i];
             }
             if (agg[currow][i][1] != agg[currow][i][2]) {                                                                   //if first and second value are not the same position 0 has the value -10
