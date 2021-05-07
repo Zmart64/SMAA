@@ -262,7 +262,6 @@ public class AGG {
             if (agg[currow][i][1] == agg[currow][i][2]) {                                                                   //if first and second value are the same put the value at position 0
                 agg[currow][i][0] = agg[currow][i][1];
             }
-
         }
     }
 
@@ -324,17 +323,11 @@ public class AGG {
 
         Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));                                   //sort for alternatives with highest score (descending)
 
-//        for (int i = 0; i < ranks.length; i++) {                                                        //print sorted alternatives with score
-//            System.out.println("Alternative: " + (int) ranks[i][0] + ", Score: " + ranks[i][1]);
-//        }
-
         int[] retRanks = new int[ranks.length];
 
         for (int i = 0; i < ranks.length; i++) {
             retRanks[i] = (int) ranks[i][0];
         }
-
-//        System.err.println(Arrays.toString(retRanks));
 
         return retRanks;
     }
@@ -402,10 +395,10 @@ public class AGG {
 
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
-        String pathMarten = "C:/Users/admin/Downloads/ex_missing_values.csv";
+        String pathMarten = "C:/Users/admin/Downloads/scenario_6.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathVincent;
+        String path = pathMarten;
         AGG agg = new AGG(path);
 
         double[][] raiTable = agg.calculateRAI(100000);
