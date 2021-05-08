@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class AGG {
@@ -8,7 +9,7 @@ public class AGG {
     private double[][][] agg;
     private ArrayList<int[]> positionsToRandomizeAt = new ArrayList<>();
 
-    public AGG(String Path) {
+    public AGG(String path) {
 
 //        agg = new double[3][3][3];
 //        agg[0][0][0] = 0.4;
@@ -33,13 +34,13 @@ public class AGG {
 //        agg[2][0][1] = 0.1;
 //        agg[2][0][2] = 0.2;
 
-        String firstDM = copyFirst(Path);
+        String firstDM = copyFirst(path);
         int[] dimensions = countRowsAndCols(firstDM);
         System.out.println("dimensions: rows: " + dimensions[0] + "cols: " + dimensions[1]);
         //initializeAGG(dimensions[0], dimensions[1]);
         initializeAGG2(dimensions[0], dimensions[1]);
 
-        csvToAGG(Path);
+        csvToAGG(path);
 
         System.out.println("AGG_Table: ");
         //System.out.println(Arrays.deepToString(agg));
@@ -107,20 +108,6 @@ public class AGG {
         return counter;
     }
 
-
-    private void initializeAGG(int rows, int cols) {
-
-        agg = new double[rows][cols][3];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                for (int k = 0; k < 3; k++) {
-                    agg[i][j][k] = -1.0;
-                }
-            }
-        }
-    }
-
     private void initializeAGG2(int rows, int cols) {
 
         agg = new double[rows][cols][3];
@@ -138,13 +125,13 @@ public class AGG {
     /**
      * creates agg, defines positionsToRandomizeAt
      **/
-    private void csvToAGG(String Path) {
+    private void csvToAGG(String path) {
         int currow = 0;
 
 
         //read all lines into rows, skip DM rows + empty lines
         try {
-            File file = new File(Path);
+            File file = new File(path);
             Scanner reader = new Scanner(file);
             while (reader.hasNextLine()) {
                 String currentLine = reader.nextLine();
@@ -238,33 +225,6 @@ public class AGG {
         }
     }
 
-    private void insertArrayInAGG(double[] doubleArray, int currow) {                                                       //agg hat überall -1.0 stehen
-
-        for (int i = 0; i < doubleArray.length; i++) {
-
-            if (doubleArray[i] == -1.0 && agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                         //if agg hasn't any value and DM didn't give a evaluation
-                agg[currow][i][0] = -5.0;                                                                                   //-5 for random values between 0 an 1
-                agg[currow][i][1] = 0.0;
-                agg[currow][i][2] = 1.0;
-            } else if (agg[currow][i][1] == -1.0 && agg[currow][i][2] == -1.0) {                                            //if agg hasn't any value and a=-1 and b=-1
-                agg[currow][i][1] = doubleArray[i];
-                agg[currow][i][2] = doubleArray[i];
-
-            } else if (doubleArray[i] < agg[currow][i][1] || agg[currow][i][1] == -1.0 || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 0)) {
-                agg[currow][i][1] = doubleArray[i];                                                                         //wenn dm bewertung gegeben hat die kleiner ist als vorheriger wert oder falls vorher noch kein wert abgegeben wurde
-
-            } else if (doubleArray[i] > agg[currow][i][2] || (agg[currow][i][0] == -5.0 && agg[currow][i][0] == 1.0)) {
-                agg[currow][i][2] = doubleArray[i];
-            }
-            if (agg[currow][i][1] != agg[currow][i][2]) {                                                                   //if first and second value are not the same position 0 has the value -10
-                agg[currow][i][0] = -10.0;
-            }
-            if (agg[currow][i][1] == agg[currow][i][2]) {                                                                   //if first and second value are the same put the value at position 0
-                agg[currow][i][0] = agg[currow][i][1];
-            }
-        }
-    }
-
     private void initPositionsToRandomizeAt() {
 
         int[] index;
@@ -316,7 +276,7 @@ public class AGG {
                 score += agg[j][0][0] * agg[j][i][0];
             }
 
-            ranks[i - 1][0] = (double) i - 1;                                                                    //score rank with alternative
+            ranks[i - 1][0] = (double) i - 1;                                                           //score rank with alternative
             ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;                                      //round score up to two decimal points
             score = 0;                                                                                  //reset score for next alternative
         }
