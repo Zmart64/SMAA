@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Scanner;
 
 public class AGG {
@@ -65,7 +64,7 @@ public class AGG {
     }
 
     //--------Copy first DMEntry, to count Rows and Columns
-    private static String copyFirst(String path) {
+    public static String copyFirst(String path) {
 
         String target = "DM";
         int counter = 0;
@@ -355,7 +354,7 @@ public class AGG {
 
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
-        String pathMarten = "C:/Users/admin/Downloads/scenario_6.csv";
+        String pathMarten = "C:/Users/admin/Downloads/scenario_1.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
         String path = pathMarten;
