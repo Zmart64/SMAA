@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.junit.jupiter:junit-jupiter:5.4.2" level="project" />
+    <orderEntry type="library" name="org.jacoco:jacoco-maven-plugin:0.8.7" level="project" />
   </component>
 </module>
