@@ -316,7 +316,7 @@ public class AGG {
                 score += agg[j][0][0] * agg[j][i][0];
             }
 
-            ranks[i - 1][0] = i - 1;                                                                    //score rank with alternative
+            ranks[i - 1][0] = (double) i - 1;                                                                    //score rank with alternative
             ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;                                      //round score up to two decimal points
             score = 0;                                                                                  //reset score for next alternative
         }
