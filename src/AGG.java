@@ -35,7 +35,7 @@ public class AGG {
 
         String firstDM = copyFirst(path);
         int[] dimensions = countRowsAndCols(firstDM);
-        System.out.println("dimensions: rows: " + dimensions[0] + "cols: " + dimensions[1]);
+        System.out.println("dimensions: rows: " + dimensions[0] + " " + "cols: " + dimensions[1]);
         //initializeAGG(dimensions[0], dimensions[1]);
         initializeAGG2(dimensions[0], dimensions[1]);
 
@@ -56,7 +56,7 @@ public class AGG {
 
 
     //--------read through and count all c's for rows and a's for columns
-    private static int[] countRowsAndCols(String data) {
+    public static int[] countRowsAndCols(String data) {
         int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
         int columns = countCharTarget(data, 'a') + 1;
 

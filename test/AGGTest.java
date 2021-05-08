@@ -17,7 +17,8 @@ public class AGGTest {
 
     @Test
     public void testCountColsAndRows(){
-
+        int[] res = AGG.countRowsAndCols(AGG.copyFirst(path));
+        Assertions.assertArrayEquals(res, new int[]{5, 9});
     }
 
 }
