@@ -54,6 +54,9 @@ public class AGG {
 
     }
 
+    public double[][][] getAgg() {
+        return agg;
+    }
 
     //--------read through and count all c's for rows and a's for columns
     public static int[] countRowsAndCols(String data) {
@@ -95,7 +98,7 @@ public class AGG {
     }
 
     //--------count occurrence of target
-    private static int countCharTarget(String data, char target) {
+    public static int countCharTarget(String data, char target) {
         int counter = 0;
 
         for (int i = 0; i < data.length(); i++) {
@@ -107,7 +110,7 @@ public class AGG {
         return counter;
     }
 
-    private void initializeAGG2(int rows, int cols) {
+    public void initializeAGG2(int rows, int cols) {
 
         agg = new double[rows][cols][3];
 

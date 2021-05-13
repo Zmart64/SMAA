@@ -1,24 +1,82 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 public class AGGTest {
 
-    //5 rows, 7 columns
-    String path = "C:/Users/admin/Downloads/scenario_1.csv";
-    AGG test = new AGG(path);
+    //5 rows, 8 + 1 columns (8 alternatives, 1 for weights)
+    String scenario_1 = "C:/Users/admin/Downloads/scenario_1.csv";
+
+    //5 rows, 8 + 1 columns
+    //two decisionmaker changed weightorder --> no impact on AGG
+    String scenario_2 = "C:/Users/admin/Downloads/scenario_2.csv";
+
+    //5 rows, 8 + 1 columns
+    //three decisionmaker changed weightorder --> changes AGG
+    String scenario_3 = "C:/Users/admin/Downloads/scenario_3.csv";
+
+    //3 rows, 3 + 1 columns
+    String scenario_4 = "C:/Users/admin/Downloads/scenario_4.csv";
+
+    //3 rows, 3 + 1 columns
+    String scenario_5 = "C:/Users/admin/Downloads/scenario_5.csv";
+
+    //3 rows, 3 + 1 columns
+    //5 decisionmaker changed weightorder --> same AGG as in scenario_4
+    String scenario_6 = "C:/Users/admin/Downloads/scenario_6.csv";
 
     @Test
-    public void testCopyFirst(){
-        String res = AGG.copyFirst(path);
-        Assertions.assertEquals(res, "\uFEFFDM1;;;;;;;;;;;;;;;;;;Gewichte;;a1;a2;a3;a4;a5;a6;a7;a80,1;c1;" +
-                "0,5;0,5;0,5;0,5;0,5;0,7;0,5;0,70,2;c2;0,2;0,2;0,2;0,2;0,2;0,1;0,2;0,20,3;c3;0,3;0,3;0,3;0,3;0,3;" +
-                "0,1;0,3;0,30,4;c4;0,4;0,4;0,4;0,4;0,4;0,1;0,4;0,40,5;c5;0,5;0,5;0,5;0,1;0,1;0,7;0,5;0,1;;;;;;;;;DM2;;;;;;;;;");
+    public void testCSVToAGGScenario_1() {
+        AGG test = new AGG(scenario_1);
+        Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.5], [0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.5, 0.7], [10.0, 0.1, 0.5], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7]], " +
+                "[[10.0, 0.2, 0.4], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.1, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0]], " +
+                "[[0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.1, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0]], " +
+                "[[10.0, 0.2, 0.4], [10.0, 0.1, 0.4], [0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.1, 0.0, 1.0], [10.0, 0.1, 0.4], [10.0, 0.1, 0.4]], " +
+                "[[10.0, 0.1, 0.5], [0.5, 0.0, 1.0], [10.0, 0.1, 0.5], [10.0, 0.1, 0.5], [0.1, 0.0, 1.0], [0.1, 0.0, 1.0], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [0.1, 0.0, 1.0]]]");
     }
 
     @Test
-    public void testCountColsAndRows(){
-        int[] res = AGG.countRowsAndCols(AGG.copyFirst(path));
-        Assertions.assertArrayEquals(res, new int[]{5, 9});
+    public void testCSVToAGGScenario_2() {
+        AGG test = new AGG(scenario_2);
+        Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.5], [0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.5, 0.7], [10.0, 0.1, 0.5], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7]], " +
+                "[[10.0, 0.2, 0.4], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.1, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0]], " +
+                "[[0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.1, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0]], " +
+                "[[10.0, 0.2, 0.4], [10.0, 0.1, 0.4], [0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.1, 0.0, 1.0], [10.0, 0.1, 0.4], [10.0, 0.1, 0.4]], " +
+                "[[10.0, 0.1, 0.5], [0.5, 0.0, 1.0], [10.0, 0.1, 0.5], [10.0, 0.1, 0.5], [0.1, 0.0, 1.0], [0.1, 0.0, 1.0], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [0.1, 0.0, 1.0]]]");
     }
 
+    @Test
+    public void testCSVToAGGScenario_3() {
+        AGG test = new AGG(scenario_3);
+        Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[0.1, 0.0, 1.0], [0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.5, 0.7], [10.0, 0.1, 0.5], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7]], " +
+                "[[0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.1, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0]], " +
+                "[[0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.1, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0]], " +
+                "[[0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.4, 0.0, 1.0], [10.0, 0.1, 0.4], [0.1, 0.0, 1.0], [10.0, 0.1, 0.4], [10.0, 0.1, 0.4]], " +
+                "[[0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.5], [10.0, 0.1, 0.5], [0.1, 0.0, 1.0], [0.1, 0.0, 1.0], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [0.1, 0.0, 1.0]]]");
+    }
+
+    @Test
+    public void testCSVToAGGScenario_4() {
+        AGG test = new AGG(scenario_4);
+        Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.3], [10.0, 0.1, 0.5], [10.0, 0.0, 0.5], [10.0, 0.1, 0.8]], " +
+                "[[10.0, 0.1, 0.2], [10.0, 0.1, 0.8], [10.0, 0.2, 0.8], [10.0, 0.2, 0.9]], " +
+                "[[10.0, 0.1, 0.3], [10.0, 0.1, 0.7], [10.0, 0.1, 0.7], [10.0, 0.1, 0.3]]]");
+    }
+
+    @Test
+    public void testCSVToAGGScenario_5() {
+        AGG test = new AGG(scenario_5);
+        Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[0.1, 0.0, 1.0], [10.0, 0.1, 0.5], [10.0, 0.0, 0.5], [10.0, 0.1, 0.8]], " +
+                "[[0.2, 0.0, 1.0], [10.0, 0.1, 0.8], [10.0, 0.2, 0.8], [10.0, 0.2, 0.9]], " +
+                "[[0.3, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.1, 0.7], [10.0, 0.1, 0.3]]]");
+    }
+
+    @Test
+    public void testCSVToAGGScenario_6() {
+        AGG test = new AGG(scenario_6);
+        Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.3], [10.0, 0.1, 0.5], [10.0, 0.0, 0.5], [10.0, 0.1, 0.8]], " +
+                "[[10.0, 0.1, 0.2], [10.0, 0.1, 0.8], [10.0, 0.2, 0.8], [10.0, 0.2, 0.9]], " +
+                "[[10.0, 0.1, 0.3], [10.0, 0.1, 0.7], [10.0, 0.1, 0.7], [10.0, 0.1, 0.3]]]");
+    }
 }
