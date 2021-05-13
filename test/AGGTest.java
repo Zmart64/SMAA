@@ -6,29 +6,29 @@ import java.util.Arrays;
 public class AGGTest {
 
     //5 rows, 8 + 1 columns (8 alternatives, 1 for weights)
-    String scenario_1 = "C:/Users/admin/Downloads/scenario_1.csv";
+    String scenario1 = "C:/Users/admin/Downloads/scenario_1.csv";
 
     //5 rows, 8 + 1 columns
     //two decisionmaker changed weightorder --> no impact on AGG
-    String scenario_2 = "C:/Users/admin/Downloads/scenario_2.csv";
+    String scenario2 = "C:/Users/admin/Downloads/scenario_2.csv";
 
     //5 rows, 8 + 1 columns
     //three decisionmaker changed weightorder --> changes AGG
-    String scenario_3 = "C:/Users/admin/Downloads/scenario_3.csv";
+    String scenario3 = "C:/Users/admin/Downloads/scenario_3.csv";
 
     //3 rows, 3 + 1 columns
-    String scenario_4 = "C:/Users/admin/Downloads/scenario_4.csv";
+    String scenario4 = "C:/Users/admin/Downloads/scenario_4.csv";
 
     //3 rows, 3 + 1 columns
-    String scenario_5 = "C:/Users/admin/Downloads/scenario_5.csv";
+    String scenario5 = "C:/Users/admin/Downloads/scenario_5.csv";
 
     //3 rows, 3 + 1 columns
     //5 decisionmaker changed weightorder --> same AGG as in scenario_4
-    String scenario_6 = "C:/Users/admin/Downloads/scenario_6.csv";
+    String scenario6 = "C:/Users/admin/Downloads/scenario_6.csv";
 
     @Test
-    public void testCSVToAGGScenario_1() {
-        AGG test = new AGG(scenario_1);
+    public void testCSVToAGGScenario1() {
+        AGG test = new AGG(scenario1);
         Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.5], [0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.5, 0.7], [10.0, 0.1, 0.5], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7]], " +
                 "[[10.0, 0.2, 0.4], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.1, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0]], " +
                 "[[0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.1, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0]], " +
@@ -37,8 +37,8 @@ public class AGGTest {
     }
 
     @Test
-    public void testCSVToAGGScenario_2() {
-        AGG test = new AGG(scenario_2);
+    public void testCSVToAGGScenario2() {
+        AGG test = new AGG(scenario2);
         Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.5], [0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.5, 0.7], [10.0, 0.1, 0.5], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7]], " +
                 "[[10.0, 0.2, 0.4], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.1, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0]], " +
                 "[[0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.1, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0]], " +
@@ -47,8 +47,8 @@ public class AGGTest {
     }
 
     @Test
-    public void testCSVToAGGScenario_3() {
-        AGG test = new AGG(scenario_3);
+    public void testCSVToAGGScenario3() {
+        AGG test = new AGG(scenario3);
         Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[0.1, 0.0, 1.0], [0.5, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.5, 0.7], [10.0, 0.1, 0.5], [0.7, 0.0, 1.0], [0.5, 0.0, 1.0], [10.0, 0.1, 0.7]], " +
                 "[[0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0], [0.1, 0.0, 1.0], [0.2, 0.0, 1.0], [0.2, 0.0, 1.0]], " +
                 "[[0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0], [0.1, 0.0, 1.0], [0.3, 0.0, 1.0], [0.3, 0.0, 1.0]], " +
@@ -57,24 +57,24 @@ public class AGGTest {
     }
 
     @Test
-    public void testCSVToAGGScenario_4() {
-        AGG test = new AGG(scenario_4);
+    public void testCSVToAGGScenario4() {
+        AGG test = new AGG(scenario4);
         Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.3], [10.0, 0.1, 0.5], [10.0, 0.0, 0.5], [10.0, 0.1, 0.8]], " +
                 "[[10.0, 0.1, 0.2], [10.0, 0.1, 0.8], [10.0, 0.2, 0.8], [10.0, 0.2, 0.9]], " +
                 "[[10.0, 0.1, 0.3], [10.0, 0.1, 0.7], [10.0, 0.1, 0.7], [10.0, 0.1, 0.3]]]");
     }
 
     @Test
-    public void testCSVToAGGScenario_5() {
-        AGG test = new AGG(scenario_5);
+    public void testCSVToAGGScenario5() {
+        AGG test = new AGG(scenario5);
         Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[0.1, 0.0, 1.0], [10.0, 0.1, 0.5], [10.0, 0.0, 0.5], [10.0, 0.1, 0.8]], " +
                 "[[0.2, 0.0, 1.0], [10.0, 0.1, 0.8], [10.0, 0.2, 0.8], [10.0, 0.2, 0.9]], " +
                 "[[0.3, 0.0, 1.0], [10.0, 0.1, 0.7], [10.0, 0.1, 0.7], [10.0, 0.1, 0.3]]]");
     }
 
     @Test
-    public void testCSVToAGGScenario_6() {
-        AGG test = new AGG(scenario_6);
+    public void testCSVToAGGScenario6() {
+        AGG test = new AGG(scenario6);
         Assertions.assertEquals(Arrays.deepToString(test.getAgg()), "[[[10.0, 0.1, 0.3], [10.0, 0.1, 0.5], [10.0, 0.0, 0.5], [10.0, 0.1, 0.8]], " +
                 "[[10.0, 0.1, 0.2], [10.0, 0.1, 0.8], [10.0, 0.2, 0.8], [10.0, 0.2, 0.9]], " +
                 "[[10.0, 0.1, 0.3], [10.0, 0.1, 0.7], [10.0, 0.1, 0.7], [10.0, 0.1, 0.3]]]");
