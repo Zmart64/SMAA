@@ -5,69 +5,51 @@ import java.util.Scanner;
 
 public class AGG {
 
-    private double[][][] agg;
+    private double[][][] table;
     private ArrayList<int[]> positionsToRandomizeAt = new ArrayList<>();
+
+    public double[][][] getAGG() {
+        return table;
+    }
 
     public AGG(String path) {
 
-//        agg = new double[3][3][3];
-//        agg[0][0][0] = 0.4;
-//        agg[1][0][0] = 0.5;
-//        agg[2][0][0] = 0.2;
-//        agg[0][1][0] = 0.6;
-//        agg[1][1][0] = 0.3;
-//        agg[0][2][0] = 0.2;
-//        agg[2][2][0] = 0.8;
-//        agg[1][2][0] = 0.8;
-//        agg[2][1][0] = 0.8;
-//        agg[0][0][1] = 0.4;
-//        agg[0][0][2] = 0.7;
-//        agg[0][1][1] = 0.2;
-//        agg[0][1][2] = 0.8;
-//        agg[1][1][1] = 0.3;
-//        agg[1][1][2] = 0.4;
-//        agg[1][0][1] = 0.1;
-//        agg[1][0][2] = 0.2;
-//        agg[2][1][1] = 0.3;
-//        agg[2][1][2] = 0.4;
-//        agg[2][0][1] = 0.1;
-//        agg[2][0][2] = 0.2;
-
-        String firstDM = copyFirst(path);
+        String firstDM = copyFirstDM(path);
         int[] dimensions = countRowsAndCols(firstDM);
-        System.out.println("dimensions: rows: " + dimensions[0] + " " + "cols: " + dimensions[1]);
-        //initializeAGG(dimensions[0], dimensions[1]);
-        initializeAGG2(dimensions[0], dimensions[1]);
 
+        initAGG(dimensions[0], dimensions[1]);
         csvToAGG(path);
-
-        System.out.println("AGG_Table: ");
-        //System.out.println(Arrays.deepToString(agg));
-        for (double[][] doubles : agg) {
-            System.out.println(Arrays.deepToString(doubles));
-        }
 
         initPositionsToRandomizeAt();
 
+        //only for testing
+        System.out.println("AGG_Table: ");
+        for (double[][] rows : table) {
+            System.out.println(Arrays.deepToString(rows));
+        }
         System.out.println("positionsToRandomizeAt: ");
         System.out.println(Arrays.deepToString(positionsToRandomizeAt.toArray()));
 
     }
 
-    public double[][][] getAgg() {
-        return agg;
-    }
 
-    //--------read through and count all c's for rows and a's for columns
-    public static int[] countRowsAndCols(String data) {
+
+    /**
+     * read through and count all c's for rows and a's for columns
+     * necessary to get dimenions for AGG-table
+     * **/
+    private static int[] countRowsAndCols(String data) {
         int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
         int columns = countCharTarget(data, 'a') + 1;
 
         return new int[]{rows, columns};
     }
 
-    //--------Copy first DMEntry, to count Rows and Columns
-    public static String copyFirst(String path) {
+    /**
+     * copies table of first Decision Maker.
+     * Method is used to be able to count Rows and Cols
+     * **/
+    private static String copyFirstDM(String path) {
 
         String target = "DM";
         int counter = 0;
@@ -97,8 +79,13 @@ public class AGG {
         return data.toString();
     }
 
-    //--------count occurrence of target
-    public static int countCharTarget(String data, char target) {
+    /**
+     * counts Occurences of a given Target in a String
+     * @param data String to search Target in
+     * @param target What to search for
+     * @return Number of Occurences of target in data
+     */
+    private static int countCharTarget(String data, char target) {
         int counter = 0;
 
         for (int i = 0; i < data.length(); i++) {
@@ -110,22 +97,28 @@ public class AGG {
         return counter;
     }
 
-    public void initializeAGG2(int rows, int cols) {
-
-        agg = new double[rows][cols][3];
+    /**
+     * initializes AGG with given dimensions and default values
+     * @param rows
+     * @param cols
+     */
+    private void initAGG(int rows, int cols) {
+        //inits each cell with [-10,0,1]
+        table = new double[rows][cols][3];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                agg[i][j][0] = -10.0;
-                agg[i][j][1] = 0.0;
-                agg[i][j][2] = 1.0;
+                table[i][j][0] = -10.0;
+                table[i][j][1] = 0.0;
+                table[i][j][2] = 1.0;
 
             }
         }
     }
 
     /**
-     * creates agg, defines positionsToRandomizeAt
+     * creates table, defines positionsToRandomizeAt
+     * @param path path to .csv file which shall be analysed
      **/
     private void csvToAGG(String path) {
         int currow = 0;
@@ -146,7 +139,7 @@ public class AGG {
                     //System.out.println(Arrays.toString(doubleArray));
                     //insertArrayInAGG(doubleArray, currow);
                     /**!!!!!!!!!!!**/
-                    insertArrayInAGG2(doubleArray, currow);
+                    insertArrayIntoAGG(doubleArray, currow);
 
                     currow++;
 
@@ -162,6 +155,11 @@ public class AGG {
         }
     }
 
+    /**
+     * filters all values out of the given line and replaces missing values with a default value (-1)
+     * @param currentLine
+     * @return string, format(example): ;1.0;0.5;-1.0;
+     */
     private String modifyString(String currentLine) {
 
         //delete c1 - cn
@@ -177,7 +175,12 @@ public class AGG {
         return modified;
     }
 
-    //------------gets String of the values as input and converts them to double Array
+
+    /**
+     * converts formatted String to a double Array
+     * @param modified
+     * @return 1D double array
+     */
     private double[] stringToDoubleArray(String modified) {
         modified = modified.replaceFirst(";", "");
         String[] strArray = modified.split(";");                            //values are seperated by ;
@@ -190,9 +193,11 @@ public class AGG {
     }
 
     /**
-     * alternative that should work, needs other agg init!, used in csvToAGG
+     * inserts a double array into the AGG-table
+     * @param values double array
+     * @param rowIndex Index to insert at
      **/
-    private void insertArrayInAGG2(double[] values, int rowIndex) {
+    private void insertArrayIntoAGG(double[] values, int rowIndex) {
         // -10 = no value, 10 = multiple values, other = one value
         for (int i = 0; i < values.length; i++) {
 
@@ -203,37 +208,40 @@ public class AGG {
                 continue;
 
             //case: no value yet
-            if (agg[rowIndex][i][0] == -10.0) {
-                agg[rowIndex][i][0] = currValue;
+            if (table[rowIndex][i][0] == -10.0) {
+                table[rowIndex][i][0] = currValue;
             }
             //case: insert in existing Interval
-            else if (agg[rowIndex][i][0] == 10.0) {
-                if (currValue < agg[rowIndex][i][1])
-                    agg[rowIndex][i][1] = currValue;
-                if (currValue > agg[rowIndex][i][2])
-                    agg[rowIndex][i][2] = currValue;
+            else if (table[rowIndex][i][0] == 10.0) {
+                if (currValue < table[rowIndex][i][1])
+                    table[rowIndex][i][1] = currValue;
+                if (currValue > table[rowIndex][i][2])
+                    table[rowIndex][i][2] = currValue;
             } else {
                 //case: one value so far -> new Interval if different
-                if (currValue > agg[rowIndex][i][0]) {
-                    agg[rowIndex][i][1] = agg[rowIndex][i][0];
-                    agg[rowIndex][i][2] = currValue;
-                    agg[rowIndex][i][0] = 10;
-                } else if (currValue < agg[rowIndex][i][0]) {
-                    agg[rowIndex][i][1] = currValue;
-                    agg[rowIndex][i][2] = agg[rowIndex][i][0];
-                    agg[rowIndex][i][0] = 10;
+                if (currValue > table[rowIndex][i][0]) {
+                    table[rowIndex][i][1] = table[rowIndex][i][0];
+                    table[rowIndex][i][2] = currValue;
+                    table[rowIndex][i][0] = 10;
+                } else if (currValue < table[rowIndex][i][0]) {
+                    table[rowIndex][i][1] = currValue;
+                    table[rowIndex][i][2] = table[rowIndex][i][0];
+                    table[rowIndex][i][0] = 10;
                 }
             }
         }
     }
 
+    /**
+     * inits class-variable PositionsToRandomizeAt, which saves all indices where values shall be randoized
+     */
     private void initPositionsToRandomizeAt() {
 
         int[] index;
 
-        for (int i = 0; i < agg.length; i++) {
-            for (int j = 0; j < agg[0].length; j++) {
-                if (agg[i][j][0] == -10 || agg[i][j][0] == 10) { //10 only when using new insert method!!!
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[0].length; j++) {
+                if (table[i][j][0] == -10 || table[i][j][0] == 10) { //10 only when using new insert method!!!
                     index = new int[2];
                     index[0] = i;
                     index[1] = j;
@@ -243,10 +251,13 @@ public class AGG {
         }
     }
 
+    /**
+     * @param numIterations How often Ranking shall be performed
+     * @return RAI-Table
+     */
+    public double[][] calculateRAI(int numIterations) {
 
-    double[][] calculateRAI(int numIterations) {
-
-        double[][] raiTable = new double[agg[1].length - 1][agg[1].length - 1];
+        double[][] raiTable = new double[table[1].length - 1][table[1].length - 1];
         // 1.dimension: Alternative, 2.dimension: possible ranks -> save points / percentage per Rank
 
         //calculate point per alternative per rank
@@ -268,14 +279,18 @@ public class AGG {
         return raiTable;
     }
 
+    /**
+     * calculates ranking for table
+     * @return ranking of alternatives, order: first to last
+     */
     private int[] calculateRanking() {
 
-        double[][] ranks = new double[agg[1].length - 1][2];                                            //number of alternatives
+        double[][] ranks = new double[table[1].length - 1][2];                                            //number of alternatives
         double score = 0;
 
-        for (int i = 1; i < agg[1].length; i++) {                                                       //traverse columns from left to right (starting with 1, because 0 is for weights)
-            for (int j = 0; j < agg.length; j++) {                                                      //traverse rows "downwards"
-                score += agg[j][0][0] * agg[j][i][0];
+        for (int i = 1; i < table[1].length; i++) {                                                       //traverse columns from left to right (starting with 1, because 0 is for weights)
+            for (int j = 0; j < table.length; j++) {                                                      //traverse rows "downwards"
+                score += table[j][0][0] * table[j][i][0];
             }
 
             ranks[i - 1][0] = (double) i - 1;                                                           //score rank with alternative
@@ -295,15 +310,14 @@ public class AGG {
     }
 
     /**
-     * generateRandomValues:
-     * generate rand value in interval[min, max] specified by indices in positionsToRandomizeAt
-     * write generated value into agg
+     * generates random values in intervals[min, max] specified by indices in positionsToRandomizeAt
+     * and writes generated value into table
      **/
     private void generateRandomValues() {
 
         for (int[] index : positionsToRandomizeAt) {
-            double min = agg[index[0]][index[1]][1];
-            double max = agg[index[0]][index[1]][2];
+            double min = table[index[0]][index[1]][1];
+            double max = table[index[0]][index[1]][2];
 
             //generate random Value in [min, max]
             double randValue = min + Math.random() * (max - min);
@@ -311,7 +325,7 @@ public class AGG {
 
             assert (randValue >= min && randValue <= max);
 
-            agg[index[0]][index[1]][0] = randValue; //write random Value into agg
+            table[index[0]][index[1]][0] = randValue; //write random Value into table
         }
     }
 
@@ -354,7 +368,10 @@ public class AGG {
         }
     }
 
-
+    /**
+     * only needed for testing atm
+     * @param args nothing
+     */
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
         String pathMarten = "C:/Users/admin/Downloads/scenario_1.csv";
