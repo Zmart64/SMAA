@@ -32,12 +32,10 @@ public class AGG {
 
     }
 
-
-
     /**
      * read through and count all c's for rows and a's for columns
      * necessary to get dimenions for AGG-table
-     * **/
+     **/
     private static int[] countRowsAndCols(String data) {
         int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
         int columns = countCharTarget(data, 'a') + 1;
@@ -48,7 +46,7 @@ public class AGG {
     /**
      * copies table of first Decision Maker.
      * Method is used to be able to count Rows and Cols
-     * **/
+     **/
     private static String copyFirstDM(String path) {
 
         String target = "DM";
@@ -81,7 +79,8 @@ public class AGG {
 
     /**
      * counts Occurences of a given Target in a String
-     * @param data String to search Target in
+     *
+     * @param data   String to search Target in
      * @param target What to search for
      * @return Number of Occurences of target in data
      */
@@ -99,6 +98,7 @@ public class AGG {
 
     /**
      * initializes AGG with given dimensions and default values
+     *
      * @param rows
      * @param cols
      */
@@ -118,6 +118,7 @@ public class AGG {
 
     /**
      * creates table, defines positionsToRandomizeAt
+     *
      * @param path path to .csv file which shall be analysed
      **/
     private void csvToAGG(String path) {
@@ -157,6 +158,7 @@ public class AGG {
 
     /**
      * filters all values out of the given line and replaces missing values with a default value (-1)
+     *
      * @param currentLine
      * @return string, format(example): ;1.0;0.5;-1.0;
      */
@@ -178,6 +180,7 @@ public class AGG {
 
     /**
      * converts formatted String to a double Array
+     *
      * @param modified
      * @return 1D double array
      */
@@ -194,7 +197,8 @@ public class AGG {
 
     /**
      * inserts a double array into the AGG-table
-     * @param values double array
+     *
+     * @param values   double array
      * @param rowIndex Index to insert at
      **/
     private void insertArrayIntoAGG(double[] values, int rowIndex) {
@@ -281,24 +285,32 @@ public class AGG {
 
     /**
      * calculates ranking for table
+     *
      * @return ranking of alternatives, order: first to last
      */
     private int[] calculateRanking() {
 
-        double[][] ranks = new double[table[1].length - 1][2];                                            //number of alternatives
+        //number of alternatives
+        double[][] ranks = new double[table[1].length - 1][2];
         double score = 0;
 
-        for (int i = 1; i < table[1].length; i++) {                                                       //traverse columns from left to right (starting with 1, because 0 is for weights)
-            for (int j = 0; j < table.length; j++) {                                                      //traverse rows "downwards"
+        //traverse columns from left to right (starting with 1, because 0 is for weights)
+        for (int i = 1; i < table[1].length; i++) {
+            //traverse rows "downwards"
+            for (int j = 0; j < table.length; j++) {
                 score += table[j][0][0] * table[j][i][0];
             }
 
-            ranks[i - 1][0] = (double) i - 1;                                                           //score rank with alternative
-            ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;                                      //round score up to two decimal points
-            score = 0;                                                                                  //reset score for next alternative
+            //score rank with alternative
+            ranks[i - 1][0] = (double) i - 1;
+            //round score up to two decimal points
+            ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;
+            //reset score for next alternative
+            score = 0;
         }
 
-        Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));                                   //sort for alternatives with highest score (descending)
+        //sort for alternatives with highest score (descending)
+        Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));
 
         int[] retRanks = new int[ranks.length];
 
@@ -328,7 +340,6 @@ public class AGG {
             table[index[0]][index[1]][0] = randValue; //write random Value into table
         }
     }
-
 
     /**
      * generates new csv file "output.csv" and writes rai values into it
@@ -370,11 +381,12 @@ public class AGG {
 
     /**
      * only needed for testing atm
+     *
      * @param args nothing
      */
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
-        String pathMarten = "C:/Users/admin/Downloads/scenario_1.csv";
+        String pathMarten = "C:/Users/admin/Downloads/my-swp-example.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
         String path = pathMarten;
@@ -383,7 +395,6 @@ public class AGG {
         double[][] raiTable = agg.calculateRAI(100000);
         System.out.println("RAI-Table: ");
         System.out.println(Arrays.deepToString(raiTable));
-
 
         raiTableToCSV(raiTable);
     }
