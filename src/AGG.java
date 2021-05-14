@@ -244,7 +244,7 @@ public class AGG {
     }
 
 
-    private double[][] calculateRAI(int numIterations) {
+    double[][] calculateRAI(int numIterations) {
 
         double[][] raiTable = new double[agg[1].length - 1][agg[1].length - 1];
         // 1.dimension: Alternative, 2.dimension: possible ranks -> save points / percentage per Rank
