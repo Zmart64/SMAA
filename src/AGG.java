@@ -37,7 +37,8 @@ public class AGG {
      * necessary to get dimenions for AGG-table
      **/
     private static int[] countRowsAndCols(String data) {
-        int rows = countCharTarget(data, 'c') - 1;                            //minus 1 wegen "Gewichte" -> ist ein c drin
+        //minus 1 wegen "Gewichte" -> ist ein c drin
+        int rows = countCharTarget(data, 'c') - 1;
         int columns = countCharTarget(data, 'a') + 1;
 
         return new int[]{rows, columns};
@@ -165,14 +166,16 @@ public class AGG {
     private String modifyString(String currentLine) {
 
         //delete c1 - cn
-        String modified = ";" + currentLine.replaceAll("c([0-9]+);", "") + ";"; //semicolons simplify following steps
+        //semicolons simplify following steps
+        String modified = ";" + currentLine.replaceAll("c([0-9]+);", "") + ";";
 
         //replace missing values with -1
         while (modified.contains(";;")) {
             modified = modified.replaceFirst(";;", ";-1;");
         }
 
-        modified = modified.replace(",", ".");               //doubles with ., not ,
+        //doubles with ., not ,
+        modified = modified.replace(",", ".");
 
         return modified;
     }
@@ -186,11 +189,14 @@ public class AGG {
      */
     private double[] stringToDoubleArray(String modified) {
         modified = modified.replaceFirst(";", "");
-        String[] strArray = modified.split(";");                            //values are seperated by ;
+
+        //values are seperated by ;
+        String[] strArray = modified.split(";");
         int length = strArray.length;
         double[] doubleArray = new double[length];
         for (int i = 0; i < length; i++) {
-            doubleArray[i] = Double.parseDouble(strArray[i]);                       //parse String to double Array
+            //parse String to double Array
+            doubleArray[i] = Double.parseDouble(strArray[i]);
         }
         return doubleArray;
     }
@@ -245,7 +251,8 @@ public class AGG {
 
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
-                if (table[i][j][0] == -10 || table[i][j][0] == 10) { //10 only when using new insert method!!!
+                //10 only when using new insert method!!!
+                if (table[i][j][0] == -10 || table[i][j][0] == 10) {
                     index = new int[2];
                     index[0] = i;
                     index[1] = j;
@@ -337,7 +344,8 @@ public class AGG {
 
             assert (randValue >= min && randValue <= max);
 
-            table[index[0]][index[1]][0] = randValue; //write random Value into table
+            //write random Value into table
+            table[index[0]][index[1]][0] = randValue;
         }
     }
 
@@ -347,7 +355,8 @@ public class AGG {
     public static void raiTableToCSV(double[][] array) {
 
         try {
-            FileWriter file = new FileWriter("output.csv");//creates new file
+            //creates new file
+            FileWriter file = new FileWriter("output.csv");
             PrintWriter writer = new PrintWriter(file);
 
             writer.println("Calculated RAIs: ");
