@@ -26,6 +26,8 @@ public class SMAA_Analyse_Tool {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 JFileChooser chooser = new JFileChooser();
+
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int returnval=chooser.showOpenDialog(null);
 
                 if(returnval == JFileChooser.APPROVE_OPTION) {
@@ -54,8 +56,8 @@ public class SMAA_Analyse_Tool {
                 String destination= textField2.getText();
                 AGG agg = new AGG(path);
 
-                double[][] raiTable = agg.calculateRAI(100000);
-                agg.raiTableToCSV(raiTable);
+                double[][] raiTable = Utils.calculateRAI(agg, 100000);
+                Utils.exportRaiTable(raiTable, destination);
 
             }
         });
