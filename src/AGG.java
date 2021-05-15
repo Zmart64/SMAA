@@ -105,7 +105,7 @@ public class AGG {
     }
 
     /**
-     * initializes AGG with given dimensions and default values
+     * initializes AGG with the given dimensions and default values
      */
     private void initAGG(int rows, int cols) {
         //inits each cell with [-10,0,1]
