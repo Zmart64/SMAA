@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFileChooser;
@@ -18,6 +19,10 @@ public class SMAA_Analyse_Tool {
         frame.setContentPane(new SMAA_Analyse_Tool().Mainpanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+
+        //center window
+        frame.setLocationRelativeTo(null);
+
         frame.setVisible(true);
     }
 
@@ -28,9 +33,9 @@ public class SMAA_Analyse_Tool {
                 JFileChooser chooser = new JFileChooser();
 
                 chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int returnval=chooser.showOpenDialog(null);
+                int returnval = chooser.showOpenDialog(null);
 
-                if(returnval == JFileChooser.APPROVE_OPTION) {
+                if (returnval == JFileChooser.APPROVE_OPTION) {
                     textField2.setText(chooser.getSelectedFile().getPath());
                 }
             }
@@ -41,9 +46,9 @@ public class SMAA_Analyse_Tool {
                 JFileChooser chooser = new JFileChooser();
                 FileFilter filter = new FileNameExtensionFilter("CSV Datei", "csv");
                 chooser.addChoosableFileFilter(filter);
-                int returnval=chooser.showOpenDialog(null);
+                int returnval = chooser.showOpenDialog(null);
 
-                if(returnval == JFileChooser.APPROVE_OPTION) {
+                if (returnval == JFileChooser.APPROVE_OPTION) {
                     textField1.setText(chooser.getSelectedFile().getPath());
                 }
             }
@@ -53,7 +58,7 @@ public class SMAA_Analyse_Tool {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String path = textField1.getText();
-                String destination= textField2.getText();
+                String destination = textField2.getText();
                 AGG agg = new AGG(path);
 
                 double[][] raiTable = Utils.calculateRAI(agg, 100000);
