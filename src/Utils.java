@@ -153,7 +153,7 @@ public class Utils {
         String pathMarten = "C:/Users/admin/Downloads/my-swp-example.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathVincent;
+        String path = pathEdgar;
         AGG agg = new AGG(path);
 
         double[][] raiTable = calculateRAI(agg, 100000);
