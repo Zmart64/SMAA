@@ -17,8 +17,6 @@ public class SMAA_Analyse_Tool {
     private JPanel Mainpanel;
 
     public static void main(String[] args) {
-        //UIManager.getCrossPlatformLookAndFeelClassName();
-        //System.setProperty("apple.awt.fileDialogForDirectories", "true");
         JFrame frame = new JFrame("SMAA Analyse Tool");
         frame.setContentPane(new SMAA_Analyse_Tool().Mainpanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,8 +24,6 @@ public class SMAA_Analyse_Tool {
 
         //center window
         frame.setLocationRelativeTo(null);
-
-
         frame.setVisible(true);
     }
 
@@ -35,40 +31,14 @@ public class SMAA_Analyse_Tool {
         browseButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                JFileChooser chooser = new JFileChooser();
-
-
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int returnval = chooser.showOpenDialog(null);
-
-                if (returnval == JFileChooser.APPROVE_OPTION) {
-                    textField2.setText(chooser.getSelectedFile().getPath());
-                }
+                textField2.setText(getPath(2));
 
             }
         });
         browseButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                /*JFileChooser chooser = new JFileChooser();
-                FileFilter filter = new FileNameExtensionFilter("CSV Datei", "csv");
-                chooser.addChoosableFileFilter(filter);
-                int returnval = chooser.showOpenDialog(null);
-
-                if (returnval == JFileChooser.APPROVE_OPTION) {
-                    textField1.setText(chooser.getSelectedFile().getPath());
-                }*/
-                FileDialog d = new FileDialog(new JFrame(), "Bitte eine .csv Datei wählen", FileDialog.LOAD);
-                d.setFile("*.csv");
-                //Filter for Mac
-                d.setFilenameFilter(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.endsWith(".csv");
-                    }
-                });
-                d.setVisible(true);
-                textField1.setText(d.getDirectory() + d.getFile());
+                textField1.setText(getPath(1));
 
 
             }
@@ -84,8 +54,36 @@ public class SMAA_Analyse_Tool {
                 double[][] raiTable = Utils.calculateRAI(agg, 100000);
                 Utils.exportRaiTable(raiTable, destination);
 
+                JOptionPane.showMessageDialog(null, "Output saved under: " + path, "Success!", JOptionPane.INFORMATION_MESSAGE);
+
             }
         });
+    }
+
+    public String getPath(int dirOrFile){
+        FileDialog d = new FileDialog(new JFrame(), "Bitte eine .csv Datei wählen", FileDialog.LOAD);
+        if (dirOrFile == 1) {
+            System.setProperty("apple.awt.fileDialogForDirectories", "false");
+            d.setFile("*.csv");
+            //Filter for Mac
+            d.setFilenameFilter(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".csv");
+                }
+            });
+        }
+        else {
+            System.setProperty("apple.awt.fileDialogForDirectories", "true");
+        }
+        d.setVisible(true);
+        return d.getDirectory() + d.getFile();
+
+    }
+
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
 }
 
