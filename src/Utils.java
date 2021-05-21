@@ -111,7 +111,7 @@ public class Utils {
             FileWriter file = new FileWriter(path+"/RAI_table.csv");
             PrintWriter writer = new PrintWriter(file);
 
-            writer.println("Calculated RAIs: ");
+            writer.println("Calculated RAIs:");
             writer.println();
 
             //first row
