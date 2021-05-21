@@ -72,7 +72,7 @@ public class Utils {
 
     /**
      * @param numIterations How often Ranking shall be performed
-     * @return RAI-Table
+     * @return RAI-Table : first dim: alternatives, second dim: ranks
      */
     public static double[][] calculateRAI(AGG agg, int numIterations) {
 
@@ -124,14 +124,14 @@ public class Utils {
             }
 
             //print all rai values per rank
-            for (int i = 0; i < raiTable[0].length; i++) {
+                for (int rank = 0; rank < raiTable.length; rank++) {
                 writer.println();
-                writer.print(i + 1 + ";");
-                for (int k = 0; k < raiTable.length; k++) {
-                    if (k < raiTable.length - 1)
-                        writer.print(String.valueOf(raiTable[i][k]).replace(".", ",") + ";");
+                writer.print(rank + 1 + ";");
+                for (int alt = 0; alt < raiTable[0].length; alt++) {
+                    if (alt < raiTable[0].length - 1)
+                        writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ",") + ";");
                     else
-                        writer.print(String.valueOf(raiTable[i][k]).replace(".", ","));
+                        writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ","));
                 }
             }
             writer.close();
@@ -139,6 +139,52 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * calculates totalpoints for each alternative
+     * points on rank i is weighted with lastRank-i+1
+     * @param raiTable
+     * @return array with totalpoints for each alternative, index = number of alternative
+     */
+    public static double[] calculateTotalPoints(double[][] raiTable){
+        double[] totalpoints = new double[raiTable.length];
+        for (int alt = 0; alt < totalpoints.length; alt++){
+            for(int rank = 0; rank < totalpoints.length;rank++){
+                //weight = totalpoints.length - i + 1 = length-rank
+                totalpoints[alt] += (totalpoints.length - rank) * raiTable[alt][rank];
+            }
+        }
+        return totalpoints;
+    }
+
+    /**
+     * calculates percentage difference between total points of each alternative and alternative with maximum totalpoints
+     * @param raiTable
+     * @return double array with percentual Differences, index = number of the alternative
+     */
+    public static double[] getPercentageDifference(double[][] raiTable){
+        double[] totalpoints = calculateTotalPoints(raiTable);
+        System.out.println("totalpoints: "+Arrays.toString(totalpoints));
+        double[] tempMax = {0,totalpoints[0]};
+        for(int i = 1; i < totalpoints.length;i++){
+            if (tempMax[1] < totalpoints[i]) {
+                tempMax[1] = totalpoints[i];
+                tempMax[0] = i;
+            }
+        }
+        System.out.println("Maximum Alternative: "+tempMax[0]+" points: "+tempMax[1]);
+
+        double max = totalpoints[(int)tempMax[0]];
+        double[] percentages = new double[totalpoints.length];
+        for (int i = 0; i < percentages.length; i++){
+            percentages[i] = Math.round((max - totalpoints[i]) / max * 10000 / 100);
+        }
+        System.out.println("percentual differences: "+Arrays.toString(percentages));
+        return percentages;
+    }
+
+
 
 
 
@@ -149,11 +195,11 @@ public class Utils {
      * @param args nothing
      */
     public static void main(String[] args) {
-        String pathVincent = "C:/UNI/04_Semester/ex_missing_values.csv";
+        String pathVincent = "C:/UNI/04_Semester/example.csv";
         String pathMarten = "C:/Users/admin/Downloads/my-swp-example.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathEdgar;
+        String path = pathVincent;
         AGG agg = new AGG(path);
 
         double[][] raiTable = calculateRAI(agg, 100000);
@@ -162,6 +208,8 @@ public class Utils {
 
         String outputPath = "C:/UNI/04_Semester";
         exportRaiTable(raiTable, outputPath);
+
+        getPercentageDifference(raiTable);
     }
 }
 
