@@ -39,7 +39,12 @@ public class SMAA_Analyse_Tool {
                 else
                     inpath = getPathElse(1);
 
-                textField1.setText(inpath);
+                if (inpath.contains("null")){
+                    textField1.setText("");
+                }
+                else {
+                    textField1.setText(inpath);
+                }
 
 
             }
@@ -54,11 +59,19 @@ public class SMAA_Analyse_Tool {
                 else
                     outpath = getPathElse(2);
 
-                textField2.setText(outpath);
+                if (outpath.contains("null")){
+                    textField2.setText(System.getProperty("user.home") + "/Downloads");
+                }
+                else {
+                    textField2.setText(outpath);
+                }
 
 
             }
         });
+
+
+
 
         startButton.addActionListener(new ActionListener() {
             @Override
