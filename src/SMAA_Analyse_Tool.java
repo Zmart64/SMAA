@@ -28,50 +28,39 @@ public class SMAA_Analyse_Tool {
     }
 
     public SMAA_Analyse_Tool() {
-        textField2.setText(System.getProperty("user.home") + "/Downloads");
+        if (System.getProperty("os.name").contains("Mac")) {
+            textField2.setText(System.getProperty("user.home") + "/Downloads");
+        } else {
+            textField2.setText(System.getProperty("user.home") + "\\Downloads");
+        }
+
         browseButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String inpath;
-                if(System.getProperty("os.name").contains("Mac")) {
+                if (System.getProperty("os.name").contains("Mac")) {
                     inpath = getPathMAC(1);
-                }
-                else
+                } else
                     inpath = getPathElse(1);
 
-                if (inpath.contains("null")){
-                    textField1.setText("");
-                }
-                else {
-                    textField1.setText(inpath);
-                }
-
-
+                textField1.setText(inpath);
             }
         });
+
         browseButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String outpath;
-                if(System.getProperty("os.name").contains("Mac")) {
+                if (System.getProperty("os.name").contains("Mac")) {
                     outpath = getPathMAC(2);
-                }
-                else
+                } else
                     outpath = getPathElse(2);
 
-                if (outpath.contains("null")){
-                    textField2.setText(System.getProperty("user.home") + "/Downloads");
-                }
-                else {
-                    textField2.setText(outpath);
-                }
+                textField2.setText(outpath);
 
 
             }
         });
-
-
-
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -90,7 +79,7 @@ public class SMAA_Analyse_Tool {
     }
 
     public String getPathMAC(int fileOrDir) {
-        FileDialog d = new FileDialog(new JFrame(),"", FileDialog.LOAD);
+        FileDialog d = new FileDialog(new JFrame(), "", FileDialog.LOAD);
         if (fileOrDir == 1) {
             System.setProperty("apple.awt.fileDialogForDirectories", "false");
             d.setFilenameFilter(new FilenameFilter() {
@@ -108,19 +97,19 @@ public class SMAA_Analyse_Tool {
     }
 
     public String getPathElse(int fileOrDir) {
-        JFileChooser chooser = new JFileChooser();
         if (fileOrDir == 1) {
-            FileFilter filter = new FileNameExtensionFilter("CSV Datei", "csv");
-            chooser.addChoosableFileFilter(filter);
-        }
-        else {
+            FileDialog d = new FileDialog(new JFrame(), "Please select a .csv-File", FileDialog.LOAD);
+            d.setFile("*.csv");
+            d.setVisible(true);
+            return d.getDirectory() + d.getFile();
+
+        } else {
+            JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
 
-        int returnval = chooser.showOpenDialog(null);
-
-        if (returnval == JFileChooser.APPROVE_OPTION) {
-            return chooser.getSelectedFile().getPath();
+            if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+                return chooser.getSelectedFile().getPath();
+            }
         }
 
         return "FAILED, PLEASE TRY AGAIN";
