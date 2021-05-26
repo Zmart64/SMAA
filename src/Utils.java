@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Utils {
 
@@ -11,7 +13,7 @@ public class Utils {
      *
      * @return ranking of alternatives, order: first to last
      */
-    private static int[] calculateRanking(AGG agg) {
+    public static int[] calculateRanking(AGG agg) {
 
         double[][][] dataTable = agg.getAGG();
 
@@ -108,7 +110,7 @@ public class Utils {
 
         try {
             //creates new file
-            FileWriter file = new FileWriter(path+"/RAI_table.csv");
+            FileWriter file = new FileWriter(path + "/RAI_table.csv");
             PrintWriter writer = new PrintWriter(file);
 
             writer.println("Calculated RAIs:");
@@ -124,7 +126,7 @@ public class Utils {
             }
 
             //print all rai values per rank
-                for (int rank = 0; rank < raiTable.length; rank++) {
+            for (int rank = 0; rank < raiTable.length; rank++) {
                 writer.println();
                 writer.print(rank + 1 + ";");
                 for (int alt = 0; alt < raiTable[0].length; alt++) {
@@ -144,13 +146,14 @@ public class Utils {
     /**
      * calculates totalpoints for each alternative
      * points on rank i is weighted with lastRank-i+1
+     *
      * @param raiTable
      * @return array with totalpoints for each alternative, index = number of alternative
      */
-    public static double[] calculateTotalPoints(double[][] raiTable){
+    public static double[] calculateTotalPoints(double[][] raiTable) {
         double[] totalpoints = new double[raiTable.length];
-        for (int alt = 0; alt < totalpoints.length; alt++){
-            for(int rank = 0; rank < totalpoints.length;rank++){
+        for (int alt = 0; alt < totalpoints.length; alt++) {
+            for (int rank = 0; rank < totalpoints.length; rank++) {
                 //weight = totalpoints.length - i + 1 = length-rank
                 totalpoints[alt] += (totalpoints.length - rank) * raiTable[alt][rank];
             }
@@ -160,34 +163,51 @@ public class Utils {
 
     /**
      * calculates percentage difference between total points of each alternative and alternative with maximum totalpoints
+     *
      * @param raiTable
      * @return double array with percentual Differences, index = number of the alternative
      */
-    public static double[] getPercentageDifference(double[][] raiTable){
+    public static double[] getPercentageDifference(double[][] raiTable) {
         double[] totalpoints = calculateTotalPoints(raiTable);
-        System.out.println("totalpoints: "+Arrays.toString(totalpoints));
-        double[] tempMax = {0,totalpoints[0]};
-        for(int i = 1; i < totalpoints.length;i++){
+        System.out.println("totalpoints: " + Arrays.toString(totalpoints));
+        double[] tempMax = {0, totalpoints[0]};
+        for (int i = 1; i < totalpoints.length; i++) {
             if (tempMax[1] < totalpoints[i]) {
                 tempMax[1] = totalpoints[i];
                 tempMax[0] = i;
             }
         }
-        System.out.println("Maximum Alternative: "+tempMax[0]+" points: "+tempMax[1]);
+        System.out.println("Maximum Alternative: " + tempMax[0] + " points: " + tempMax[1]);
 
-        double max = totalpoints[(int)tempMax[0]];
+        double max = totalpoints[(int) tempMax[0]];
         double[] percentages = new double[totalpoints.length];
-        for (int i = 0; i < percentages.length; i++){
+        for (int i = 0; i < percentages.length; i++) {
             percentages[i] = Math.round((max - totalpoints[i]) / max * 10000 / 100);
         }
-        System.out.println("percentual differences: "+Arrays.toString(percentages));
+        System.out.println("percentual differences: " + Arrays.toString(percentages));
         return percentages;
     }
 
+    /**
+     * decides about which alternatives should be discarded;
+     * the minimum percentage difference to the highest ranked alternative is customizable (second parameter)
+     * @param percentageDifferences
+     * @return returns a set of integers which contains the alternatives that should be discarded (starting with 1)
+     */
+    private static Set<Integer> decideExclusion(double[] percentageDifferences, double minDifference) {
+        Set<Integer> discards = new HashSet<>();
 
+        for (int i = 1; i <= percentageDifferences.length; i++) {
+            if(percentageDifferences[i - 1] >= minDifference){
+                discards.add(i);
+            }
+        }
 
+        //for testing
+        System.out.println("Alternatives to be discarded: " + Arrays.toString(discards.toArray()));
 
-
+        return discards;
+    }
 
     /**
      * only needed for testing atm
@@ -196,7 +216,7 @@ public class Utils {
      */
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/example.csv";
-        String pathMarten = "C:/Users/marte/Downloads/scenario_4.csv";
+        String pathMarten = "C:/Users/admin/Downloads/scenario_5.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
         String path = pathMarten;
@@ -206,10 +226,10 @@ public class Utils {
         System.out.println("RAI-Table: ");
         System.out.println(Arrays.deepToString(raiTable));
 
-        String outputPath = "C:/UNI/04_Semester";
-        exportRaiTable(raiTable, outputPath);
+        decideExclusion(getPercentageDifference(raiTable), 20);
 
-        getPercentageDifference(raiTable);
+//        String outputPath = "C:/UNI/04_Semester";
+//        exportRaiTable(raiTable, outputPath);
     }
 }
 
