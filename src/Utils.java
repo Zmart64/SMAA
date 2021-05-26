@@ -1,10 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Utils {
 
@@ -136,6 +133,24 @@ public class Utils {
                         writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ","));
                 }
             }
+
+            //print recommendation
+            List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
+
+            writer.println();
+            writer.println();
+
+            if (discards.isEmpty()) {
+                writer.println("The alternative-scores are not distinguishable enough. \n " +
+                        "Re-evaluate your decisions and restart the SMAA.");
+            } else {
+                writer.print("The following alternatives should be discarded: ");
+                writer.println();
+                for (Integer discard : discards) {
+                    writer.println(discard);
+                }
+            }
+
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -191,14 +206,15 @@ public class Utils {
     /**
      * decides about which alternatives should be discarded;
      * the minimum percentage difference to the highest ranked alternative is customizable (second parameter)
+     *
      * @param percentageDifferences
-     * @return returns a set of integers which contains the alternatives that should be discarded (starting with 1)
+     * @return returns a list of integers which contains the alternatives that should be discarded (starting with 1)
      */
-    private static Set<Integer> decideExclusion(double[] percentageDifferences, double minDifference) {
-        Set<Integer> discards = new HashSet<>();
+    private static List<Integer> decideExclusion(double[] percentageDifferences, double minDifference) {
+        List<Integer> discards = new ArrayList<>();
 
         for (int i = 1; i <= percentageDifferences.length; i++) {
-            if(percentageDifferences[i - 1] >= minDifference){
+            if (percentageDifferences[i - 1] >= minDifference) {
                 discards.add(i);
             }
         }
