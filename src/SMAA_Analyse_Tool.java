@@ -54,7 +54,7 @@ public class SMAA_Analyse_Tool {
                 String outpath;
                 if (System.getProperty("os.name").contains("Mac")) {
                     outpath = getPathMAC(2);
-                    if (outpath.contains("null")) outpath = "";
+                    if (outpath.contains("null")) outpath =  System.getProperty("user.home") + "/Downloads";
                 } else
                     outpath = getPathElse(2);
 
