@@ -40,6 +40,7 @@ public class SMAA_Analyse_Tool {
                 String inpath;
                 if (System.getProperty("os.name").contains("Mac")) {
                     inpath = getPathMAC(1);
+                    if (inpath.contains(null)) inpath = "";
                 } else
                     inpath = getPathElse(1);
 
@@ -53,6 +54,7 @@ public class SMAA_Analyse_Tool {
                 String outpath;
                 if (System.getProperty("os.name").contains("Mac")) {
                     outpath = getPathMAC(2);
+                    if (outpath.contains(null)) outpath = "";
                 } else
                     outpath = getPathElse(2);
 
