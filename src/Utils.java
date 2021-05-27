@@ -135,6 +135,7 @@ public class Utils {
             }
 
             //print recommendation
+            //minimal percentual difference is customizable
             List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
 
             writer.println();
