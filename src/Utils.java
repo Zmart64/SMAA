@@ -100,61 +100,69 @@ public class Utils {
         return raiTable;
     }
 
+
     /**
      * generates new csv file "output.csv" and writes rai values into it
      */
-    public static void exportRaiTable(double[][] raiTable, String path) {
+    public static void exportCsv(double[][] raiTable, String pathToFile) {
 
         try {
             //creates new file
-            FileWriter file = new FileWriter(path + "/RAI_table.csv");
+            FileWriter file = new FileWriter(pathToFile);
             PrintWriter writer = new PrintWriter(file);
-
-            writer.println("Calculated RAIs:");
-            writer.println();
-
-            //first row
-            writer.print("Rank;");
-            for (int i = 0; i < raiTable[0].length; i++) {
-                if (i < raiTable[0].length - 1)
-                    writer.print("a" + (i + 1) + ";");
-                else
-                    writer.print("a" + (i + 1));
-            }
-
-            //print all rai values per rank
-            for (int rank = 0; rank < raiTable.length; rank++) {
-                writer.println();
-                writer.print(rank + 1 + ";");
-                for (int alt = 0; alt < raiTable[0].length; alt++) {
-                    if (alt < raiTable[0].length - 1)
-                        writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ",") + ";");
-                    else
-                        writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ","));
-                }
-            }
-
-            //print recommendation
-            //minimal percentual difference is customizable
-            List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
-
-            writer.println();
-            writer.println();
-
-            if (discards.isEmpty()) {
-                writer.println("The alternative-scores are not distinguishable enough. \n " +
-                        "Re-evaluate your decisions and restart the SMAA.");
-            } else {
-                writer.print("The following alternatives should be discarded: ");
-                writer.println();
-                for (Integer discard : discards) {
-                    writer.println(discard);
-                }
-            }
-
+            printRaiTable(raiTable, file, writer);
+            printRecommendation(raiTable, file, writer);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /** prints RaiTable into .csv-file**/
+    private static void printRaiTable(double[][] raiTable,FileWriter file, PrintWriter writer) throws IOException {
+        writer.println("Calculated RAIs:");
+        writer.println();
+
+        //first row
+        writer.print("Rank;");
+        for (int i = 0; i < raiTable[0].length; i++) {
+            if (i < raiTable[0].length - 1)
+                writer.print("a" + (i + 1) + ";");
+            else
+                writer.print("a" + (i + 1));
+        }
+
+        //print all rai values per rank
+        for (int rank = 0; rank < raiTable.length; rank++) {
+            writer.println();
+            writer.print(rank + 1 + ";");
+            for (int alt = 0; alt < raiTable[0].length; alt++) {
+                if (alt < raiTable[0].length - 1)
+                    writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ",") + ";");
+                else
+                    writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ","));
+            }
+        }
+    }
+
+    /** prints Recommendation .csv-file**/
+    private static void printRecommendation(double[][] raiTable, FileWriter file, PrintWriter writer) throws IOException {
+        //print recommendation
+        //minimal percentual difference is customizable
+        List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
+
+        writer.println();
+        writer.println();
+
+        if (discards.isEmpty()) {
+            writer.println("The alternative-scores are not distinguishable enough. \n " +
+                    "Re-evaluate your decisions and restart the SMAA.");
+        } else {
+            writer.print("The following alternatives should be discarded: ");
+            writer.println();
+            for (Integer discard : discards) {
+                writer.println(discard);
+            }
         }
     }
 
@@ -170,7 +178,7 @@ public class Utils {
         double[] totalpoints = new double[raiTable.length];
         for (int alt = 0; alt < totalpoints.length; alt++) {
             for (int rank = 0; rank < totalpoints.length; rank++) {
-                //weight = totalpoints.length - i + 1 = length-rank
+                //weight = length-(rank-1)
                 totalpoints[alt] += (totalpoints.length - rank) * raiTable[alt][rank];
             }
         }
@@ -186,16 +194,20 @@ public class Utils {
     public static double[] getPercentageDifference(double[][] raiTable) {
         double[] totalpoints = calculateTotalPoints(raiTable);
         System.out.println("totalpoints: " + Arrays.toString(totalpoints));
-        double[] tempMax = {0, totalpoints[0]};
+
+        //search maximum
+        int maxIndex = 0;
+        double max = totalpoints[0];
         for (int i = 1; i < totalpoints.length; i++) {
-            if (tempMax[1] < totalpoints[i]) {
-                tempMax[1] = totalpoints[i];
-                tempMax[0] = i;
+            if (max < totalpoints[i]) {
+                max = totalpoints[i];
+                maxIndex = i;
             }
         }
-        System.out.println("Maximum Alternative: " + tempMax[0] + " points: " + tempMax[1]);
 
-        double max = totalpoints[(int) tempMax[0]];
+        System.out.println("Maximum Alternative: " + maxIndex + " points: " + max);
+
+        //calculate percentageDifferences
         double[] percentages = new double[totalpoints.length];
         for (int i = 0; i < percentages.length; i++) {
             percentages[i] = Math.round((max - totalpoints[i]) / max * 10000 / 100);
@@ -236,7 +248,7 @@ public class Utils {
         String pathMarten = "C:/Users/admin/Downloads/scenario_5.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathMarten;
+        String path = pathVincent;
         AGG agg = new AGG(path);
 
         double[][] raiTable = calculateRAI(agg, 100000);

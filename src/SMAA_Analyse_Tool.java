@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 
 public class SMAA_Analyse_Tool {
     private JTextField textField1;
@@ -69,9 +70,13 @@ public class SMAA_Analyse_Tool {
                 AGG agg = new AGG(path);
 
                 double[][] raiTable = Utils.calculateRAI(agg, 100000);
-                Utils.exportRaiTable(raiTable, destination);
 
-                JOptionPane.showMessageDialog(null, "Output saved at: " + textField2.getText() + "/RAI_table.csv", "Success!", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("RAI-Table: ");
+                System.out.println(Arrays.deepToString(raiTable));
+
+                String pathToFile = textField2.getText() + "/RAI_table.csv";
+                Utils.exportCsv(raiTable, pathToFile);
+                JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
 
             }
         });
