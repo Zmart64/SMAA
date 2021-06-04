@@ -31,10 +31,10 @@ public class AGG {
     public double[][][] getAGG() {
         return dataTable;
     }
+
     public ArrayList<int[]> getRandPositions() {
         return posToRandomize;
     }
-
 
 
     /**

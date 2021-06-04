@@ -223,7 +223,7 @@ public class Utils {
      * @param percentageDifferences
      * @return returns a list of integers which contains the alternatives that should be discarded (starting with 1)
      */
-    private static List<Integer> decideExclusion(double[] percentageDifferences, double minDifference) {
+    public static List<Integer> decideExclusion(double[] percentageDifferences, double minDifference) {
         List<Integer> discards = new ArrayList<>();
 
         for (int i = 1; i <= percentageDifferences.length; i++) {
@@ -248,7 +248,7 @@ public class Utils {
         String pathMarten = "C:/Users/admin/Downloads/scenario_5.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
-        String path = pathVincent;
+        String path = pathMarten;
         AGG agg = new AGG(path);
 
         double[][] raiTable = calculateRAI(agg, 100000);
