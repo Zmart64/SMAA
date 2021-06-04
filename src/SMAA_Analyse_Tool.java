@@ -1,22 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Arrays;
 
 public class SMAA_Analyse_Tool {
-    private JTextField textField1;
     private JButton startButton;
-    private JTextField textField2;
-    private JButton browseButton1;
-    private JButton browseButton2;
-    private JPanel Mainpanel;
+    private JTextField sourceTextField;
+    private JTextField targetTextField;
+    private JButton browseSourceButton;
+    private JButton browseTargetButton;
+    private JPanel mainPanel;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("SMAA Analyse Tool");
-        frame.setContentPane(new SMAA_Analyse_Tool().Mainpanel);
+        frame.setContentPane(new SMAA_Analyse_Tool().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
 
@@ -27,58 +23,43 @@ public class SMAA_Analyse_Tool {
 
     public SMAA_Analyse_Tool() {
         if (System.getProperty("os.name").contains("Mac")) {
-            textField2.setText(System.getProperty("user.home") + "/Downloads");
+            targetTextField.setText(System.getProperty("user.home") + "/Downloads");
         } else {
-            textField2.setText(System.getProperty("user.home") + "\\Downloads");
+            targetTextField.setText(System.getProperty("user.home") + "\\Downloads");
         }
 
-        browseButton1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String inpath;
-                if (System.getProperty("os.name").contains("Mac")) {
-                    inpath = getPathMAC(1);
-                    if (inpath.contains("null")) inpath = "";
-                } else
-                    inpath = getPathElse(1);
+        browseSourceButton.addActionListener(actionEvent -> {
+            String inpath;
+            if (System.getProperty("os.name").contains("Mac")) {
+                inpath = getPathMAC(1);
+                if (inpath.contains("null")) inpath = "";
+            } else
+                inpath = getPathElse(1);
 
-                textField1.setText(inpath);
-            }
+            sourceTextField.setText(inpath);
         });
 
-        browseButton2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String outpath;
-                if (System.getProperty("os.name").contains("Mac")) {
-                    outpath = getPathMAC(2);
-                    if (outpath.contains("null")) outpath =  System.getProperty("user.home") + "/Downloads";
-                } else
-                    outpath = getPathElse(2);
+        browseTargetButton.addActionListener(actionEvent -> {
+            String outpath;
+            if (System.getProperty("os.name").contains("Mac")) {
+                outpath = getPathMAC(2);
+                if (outpath.contains("null")) outpath =  System.getProperty("user.home") + "/Downloads";
+            } else
+                outpath = getPathElse(2);
 
-                textField2.setText(outpath);
+            targetTextField.setText(outpath);
 
 
-            }
         });
 
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String path = textField1.getText();
-                String destination = textField2.getText();
-                AGG agg = new AGG(path);
+        startButton.addActionListener(actionEvent -> {
+            String sourcePath = sourceTextField.getText();
+            AGG agg = new AGG(sourcePath);
+            double[][] raiTable = Utils.calculateRAI(agg, 100000);
 
-                double[][] raiTable = Utils.calculateRAI(agg, 100000);
-
-                System.out.println("RAI-Table: ");
-                System.out.println(Arrays.deepToString(raiTable));
-
-                String pathToFile = textField2.getText() + "/RAI_table.csv";
-                Utils.exportCsv(raiTable, pathToFile);
-                JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
-
-            }
+            String pathToFile = targetTextField.getText() + "/RAI_table.csv";
+            Utils.exportCsv(raiTable, pathToFile);
+            JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 
@@ -86,12 +67,7 @@ public class SMAA_Analyse_Tool {
         FileDialog d = new FileDialog(new JFrame(), "", FileDialog.LOAD);
         if (fileOrDir == 1) {
             System.setProperty("apple.awt.fileDialogForDirectories", "false");
-            d.setFilenameFilter(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".csv");
-                }
-            });
+            d.setFilenameFilter((dir, name) -> name.endsWith(".csv"));
         } else {
             System.setProperty("apple.awt.fileDialogForDirectories", "true");
         }

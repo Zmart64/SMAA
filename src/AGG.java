@@ -6,11 +6,11 @@ import java.util.Scanner;
 public class AGG {
 
     private double[][][] dataTable;
-    private ArrayList<int[]> posToRandomize = new ArrayList<>();
+    private ArrayList<int[]> posToRandomizeAt = new ArrayList<>();
 
     public AGG(String path) {
 
-        String firstDM = copyFirstDM(path);
+        String firstDM = copyFirstDmTable(path);
         int[] dimensions = countRowsAndCols(firstDM);
 
         initAGG(dimensions[0], dimensions[1]);
@@ -18,71 +18,37 @@ public class AGG {
 
         initPositionsToRandomizeAt();
 
-        //only for testing
-        System.out.println("AGG_Table: ");
-        for (double[][] rows : dataTable) {
-            System.out.println(Arrays.deepToString(rows));
+        // TODO: delete before commiting final version
+        {
+            System.out.println("AGG_Table: ");
+            for (double[][] rows : dataTable) {
+                System.out.println(Arrays.deepToString(rows));
+            }
+
+            System.out.println("posToRandomizeAt: ");
+            System.out.println(Arrays.deepToString(posToRandomizeAt.toArray()));
         }
-        System.out.println("posToRandomize: ");
-        System.out.println(Arrays.deepToString(posToRandomize.toArray()));
 
     }
 
     public double[][][] getAGG() {
         return dataTable;
     }
+
     public ArrayList<int[]> getRandPositions() {
-        return posToRandomize;
+        return posToRandomizeAt;
     }
 
 
-
     /**
-     * <ul>
-     *     <li>read through and count all c's for rows and a's for columns</li>
-     *     <li>necessary to get dimensions for AGG-dataTable</li>
-     * </ul>
+     * read through and count all c's for rows and a's for columns
+     * necessary to get dimensions for AGG-dataTable
      */
     private static int[] countRowsAndCols(String data) {
-        //minus 1 wegen "Gewichte" -> ist ein c drin
+        //minus 1 wegen Wort "Gewichten" ist ein weiteres c drin
         int rows = countCharTarget(data, 'c') - 1;
         int columns = countCharTarget(data, 'a') + 1;
-
         return new int[]{rows, columns};
-    }
-
-    /**
-     * copies dataTable of first Decision Maker.
-     * Method is used to be able to count Rows and Cols
-     */
-    private static String copyFirstDM(String path) {
-
-        String target = "DM";
-        int counter = 0;
-
-        StringBuilder data = new StringBuilder();
-
-        try {
-            File myObj = new File(path);
-            Scanner myReader = new Scanner(myObj);
-            while (counter <= 1 && myReader.hasNextLine()) {
-                String t = myReader.nextLine();
-
-                data.append(t);
-
-                if (t.contains(target)) {
-                    counter++;
-                }
-            }
-
-            myReader.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found! Check input path.");
-            e.printStackTrace();
-        }
-
-        return data.toString();
     }
 
     /**
@@ -94,15 +60,46 @@ public class AGG {
      */
     private static int countCharTarget(String data, char target) {
         int counter = 0;
-
         for (int i = 0; i < data.length(); i++) {
             if (target == data.charAt(i)) {
                 counter++;
             }
         }
-
         return counter;
     }
+
+    /**
+     * copies dataTable of first Decision Maker.
+     * Method is used to be able to count Rows and Cols
+     */
+    private static String copyFirstDmTable(String path) {
+
+        String target = "DM";
+        int counter = 0;
+
+        StringBuilder data = new StringBuilder();
+
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (counter <= 1 && myReader.hasNextLine()) {
+                String t = myReader.nextLine();
+                data.append(t);
+
+                if (t.contains(target)) {
+                    counter++;
+                }
+            }
+
+            myReader.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return data.toString();
+    }
+
 
     /**
      * initializes AGG with the given dimensions and default values
@@ -122,44 +119,42 @@ public class AGG {
     }
 
     /**
-     * creates dataTable, defines posToRandomize
+     * creates dataTable, defines posToRandomizeAt
+     *
      * @param path path to .csv file which shall be analysed
      */
     private void csvToAGG(String path) {
-        int currow = 0;
-
+        int currentRow = 0;
 
         //read all lines into rows, skip DM rows + empty lines
         try {
             File file = new File(path);
             Scanner reader = new Scanner(file);
             while (reader.hasNextLine()) {
+
                 String currentLine = reader.nextLine();
 
-                if (currentLine.contains("c") && !currentLine.contains("G") && !currentLine.contains("|")) { //case: line contains relevant values
-                    //rows.add(currentLine);
+                //case: line contains relevant values
+                if (currentLine.contains("c") && !currentLine.contains("G")) {
+                    double[] doubleArray = stringToDoubleArray(modifyString(currentLine));
+                    insertArrayIntoAGG(doubleArray, currentRow);
+                    currentRow++;
 
-                    String modified = modifyString(currentLine);
-                    double[] doubleArray = stringToDoubleArray(modified);
-
-                    insertArrayIntoAGG(doubleArray, currow);
-
-                    currow++;
-
-                } else if (currentLine.contains("DM")) { //case:DM, ignore
-                    currow = 0;
+                //case:DM /first row of a table
+                } else if (currentLine.contains("DM")) {
+                    currentRow = 0;
                 }
                 //else: Gewichte or empty line -> ignore
             }
             reader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found! Check input path.");
             e.printStackTrace();
         }
     }
 
     /**
      * filters all values out of the given line and replaces missing values with a default value (-1)
+     *
      * @return string, format(example): ;1.0;0.5;-1.0;
      */
     private String modifyString(String currentLine) {
@@ -191,12 +186,13 @@ public class AGG {
 
         //values are seperated by ;
         String[] strArray = modified.split(";");
-        int length = strArray.length;
-        double[] doubleArray = new double[length];
-        for (int i = 0; i < length; i++) {
-            //parse String to double Array
+
+        //parse and store into doubleArray
+        double[] doubleArray = new double[strArray.length];
+        for (int i = 0; i < doubleArray.length; i++) {
             doubleArray[i] = Double.parseDouble(strArray[i]);
         }
+
         return doubleArray;
     }
 
@@ -226,8 +222,8 @@ public class AGG {
                     dataTable[rowIndex][i][1] = currValue;
                 if (currValue > dataTable[rowIndex][i][2])
                     dataTable[rowIndex][i][2] = currValue;
+            //case: one value so far -> new Interval if different
             } else {
-                //case: one value so far -> new Interval if different
                 if (currValue > dataTable[rowIndex][i][0]) {
                     dataTable[rowIndex][i][1] = dataTable[rowIndex][i][0];
                     dataTable[rowIndex][i][2] = currValue;
@@ -242,7 +238,8 @@ public class AGG {
     }
 
     /**
-     * inits class-variable PositionsToRandomizeAt, which saves all indices where values shall be randoized
+     * inits class-variable PositionsToRandomizeAt, which saves all indices where values shall be randomized
+     * (first Element in Cell is 10 or -10 if there is an interval)
      */
     private void initPositionsToRandomizeAt() {
 
@@ -250,17 +247,15 @@ public class AGG {
 
         for (int i = 0; i < dataTable.length; i++) {
             for (int j = 0; j < dataTable[0].length; j++) {
-                //10 only when using new insert method!!!
                 if (dataTable[i][j][0] == -10 || dataTable[i][j][0] == 10) {
                     index = new int[2];
                     index[0] = i;
                     index[1] = j;
-                    posToRandomize.add(index);
+                    posToRandomizeAt.add(index);
                 }
             }
         }
     }
-
 
 
 }

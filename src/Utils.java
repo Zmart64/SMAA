@@ -8,41 +8,39 @@ public class Utils {
     /**
      * calculates ranking for dataTable
      *
-     * @return ranking of alternatives, order: first to last
+     * @return ranking of alternatives (specified by a number), order: first to last
      */
     public static int[] calculateRanking(AGG agg) {
 
         double[][][] dataTable = agg.getAGG();
 
-        //number of alternatives
+        //ranks stores 1.Number of the Alternative, 2.Score
         double[][] ranks = new double[dataTable[1].length - 1][2];
-        double score = 0;
 
-        //traverse columns from left to right (starting with 1, because 0 is for weights)
+        double tempScore = 0;
+
+        //traverse columns from left to right (starting with 1, because first column is for weights)
         for (int i = 1; i < dataTable[1].length; i++) {
             //traverse rows "downwards"
-            for (int j = 0; j < dataTable.length; j++) {
-                score += dataTable[j][0][0] * dataTable[j][i][0];
+            for (double[][] doubles : dataTable) {
+                tempScore += doubles[0][0] * doubles[i][0];
             }
 
-            //score rank with alternative
             ranks[i - 1][0] = (double) i - 1;
-            //round score up to two decimal points
-            ranks[i - 1][1] = Math.round(score * 100.00) / 100.00;
-            //reset score for next alternative
-            score = 0;
+            ranks[i - 1][1] = Math.round(tempScore * 100.00) / 100.00;
+            tempScore = 0;
         }
 
         //sort for alternatives with highest score (descending)
         Arrays.sort(ranks, (o1, o2) -> Double.compare(o2[1], o1[1]));
 
-        int[] retRanks = new int[ranks.length];
+        int[] ranking = new int[ranks.length];
 
         for (int i = 0; i < ranks.length; i++) {
-            retRanks[i] = (int) ranks[i][0];
+            ranking[i] = (int) ranks[i][0];
         }
 
-        return retRanks;
+        return ranking;
     }
 
     /**
@@ -62,8 +60,6 @@ public class Utils {
             double randValue = min + Math.random() * (max - min);
             randValue = (double) (Math.round(randValue * 10)) / 10;
 
-            assert (randValue >= min && randValue <= max);
-
             //write random Value into dataTable
             dataTable[index[0]][index[1]][0] = randValue;
         }
@@ -75,34 +71,37 @@ public class Utils {
      */
     public static double[][] calculateRAI(AGG agg, int numIterations) {
 
-        ArrayList<int[]> posToRandomize = agg.getRandPositions();
         double[][][] dataTable = agg.getAGG();
 
         double[][] raiTable = new double[dataTable[1].length - 1][dataTable[1].length - 1];
         // 1.dimension: Alternative, 2.dimension: possible ranks -> save points / percentage per Rank
 
-        //calculate point per alternative per rank
+
         for (int i = 0; i < numIterations; i++) {
             generateRandomValues(agg);
             int[] rankedAlternatives = calculateRanking(agg);
+            //increment points at corresponding alternative / rank
             for (int rank = 0; rank < rankedAlternatives.length; rank++) {
                 raiTable[rankedAlternatives[rank]][rank]++;
             }
         }
 
         //calculate RAI (in %, 2 decimals after comma)
-        for (int a = 0; a < raiTable.length; a++) {
+        for (int alt = 0; alt < raiTable.length; alt++) {
             for (int rank = 0; rank < raiTable.length; rank++) {
-                raiTable[a][rank] = Math.round(raiTable[a][rank] / numIterations * 100 * 100) / 100.0;
+                raiTable[alt][rank] = Math.round(raiTable[alt][rank] / numIterations * 100 * 100) / 100.0;
             }
         }
+
+        System.out.println("RAI-Table: ");
+        System.out.println(Arrays.deepToString(raiTable));
 
         return raiTable;
     }
 
 
     /**
-     * generates new csv file "output.csv" and writes rai values into it
+     * generates new csv file and writes rai values into it
      */
     public static void exportCsv(double[][] raiTable, String pathToFile) {
 
@@ -110,8 +109,8 @@ public class Utils {
             //creates new file
             FileWriter file = new FileWriter(pathToFile);
             PrintWriter writer = new PrintWriter(file);
-            printRaiTable(raiTable, file, writer);
-            printRecommendation(raiTable, file, writer);
+            printRaiTable(raiTable, writer);
+            printRecommendation(raiTable, writer);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,7 +118,7 @@ public class Utils {
     }
 
     /** prints RaiTable into .csv-file**/
-    private static void printRaiTable(double[][] raiTable,FileWriter file, PrintWriter writer) throws IOException {
+    private static void printRaiTable(double[][] raiTable, PrintWriter writer) throws IOException {
         writer.println("Calculated RAIs:");
         writer.println();
 
@@ -145,10 +144,10 @@ public class Utils {
         }
     }
 
-    /** prints Recommendation .csv-file**/
-    private static void printRecommendation(double[][] raiTable, FileWriter file, PrintWriter writer) throws IOException {
-        //print recommendation
-        //minimal percentual difference is customizable
+    /** prints Recommendation .csv-file
+     * minimal percentual difference is customizable
+     * **/
+    private static void printRecommendation(double[][] raiTable, PrintWriter writer) throws IOException {
         List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
 
         writer.println();
@@ -232,12 +231,14 @@ public class Utils {
             }
         }
 
-        //for testing
         System.out.println("Alternatives to be discarded: " + Arrays.toString(discards.toArray()));
 
         return discards;
     }
 
+
+
+    // TODO: remove before final commit (also: remove all System.out.println in all classes!)
     /**
      * only needed for testing atm
      *
@@ -252,8 +253,7 @@ public class Utils {
         AGG agg = new AGG(path);
 
         double[][] raiTable = calculateRAI(agg, 100000);
-        System.out.println("RAI-Table: ");
-        System.out.println(Arrays.deepToString(raiTable));
+
 
         decideExclusion(getPercentageDifference(raiTable), 20);
 
