@@ -1,30 +1,29 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 
 public class AGGTest {
 
     //5 rows, 8 + 1 columns (8 alternatives, 1 for weights)
-    String scenario1 = "C:/Users/admin/Downloads/scenario_1.csv";
+    String scenario1 = "test/resources/scenario_1.csv";
 
     //5 rows, 8 + 1 columns
     //two decisionmaker changed weightorder --> no impact on AGG
-    String scenario2 = "C:/Users/admin/Downloads/scenario_2.csv";
+    String scenario2 = "test/resources/scenario_2.csv";
 
     //5 rows, 8 + 1 columns
     //three decisionmaker changed weightorder --> changes AGG
-    String scenario3 = "C:/Users/admin/Downloads/scenario_3.csv";
+    String scenario3 = "test/resources/scenario_3.csv";
 
     //3 rows, 3 + 1 columns
-    String scenario4 = "C:/Users/admin/Downloads/scenario_4.csv";
+    String scenario4 = "test/resources/scenario_4.csv";
 
     //3 rows, 3 + 1 columns
-    String scenario5 = "C:/Users/admin/Downloads/scenario_5.csv";
+    String scenario5 = "test/resources/scenario_5.csv";
 
     //3 rows, 3 + 1 columns
     //5 decisionmaker changed weightorder --> same AGG as in scenario_4
-    String scenario6 = "C:/Users/admin/Downloads/scenario_6.csv";
+    String scenario6 = "test/resources/scenario_6.csv";
 
     @Test
     public void testCSVToAGGScenario1() {
