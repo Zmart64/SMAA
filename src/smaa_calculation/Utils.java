@@ -250,7 +250,7 @@ public class Utils {
      */
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/example.csv";
-        String pathMarten = "C:/Users/admin/OneDrive/Dokumente/UNI/4. Semester/Softwareprojekt/SMAA/test/resources/small-fixed-agg.csv";
+        String pathMarten = "C:/Users/admin/OneDrive/Dokumente/UNI/4. Semester/Softwareprojekt/SMAA/test/resources/medium-fixed-agg.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
         String path = pathMarten;
