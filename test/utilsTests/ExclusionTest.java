@@ -8,12 +8,13 @@ import org.junit.runners.Parameterized.Parameters;
 import utilsTestsTools.FillParameters;
 
 import java.util.Collection;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class ExclusionTest {
 
-    private final int[] input;
-    private final int[] expected;
+    private final List<Integer> input;
+    private final List<Integer> expected;
 
     @Parameters(name = "Test for: {0} exclusion")
     public static Collection<Object[]> exclusionTest () throws Exception {
@@ -21,13 +22,13 @@ public class ExclusionTest {
     }
 
 
-    public ExclusionTest(String name, int[] input, int[] expected){
+    public ExclusionTest(String name, List<Integer> input, List<Integer> expected){
         this.input = input;
         this.expected = expected;
     }
 
     @Test
     public void test(){
-        Assertions.assertArrayEquals(input, expected);
+        Assertions.assertEquals(input, expected);
     }
 }
