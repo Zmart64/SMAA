@@ -1,3 +1,5 @@
+package smaa_creation;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +44,7 @@ public class AGG {
 
     /**
      * read through and count all c's for rows and a's for columns
-     * necessary to get dimensions for AGG-dataTable
+     * necessary to get dimensions for smaa.AGG-dataTable
      */
     private static int[] countRowsAndCols(String data) {
         //minus 1 wegen Wort "Gewichten" ist ein weiteres c drin
@@ -102,7 +104,7 @@ public class AGG {
 
 
     /**
-     * initializes AGG with the given dimensions and default values
+     * initializes smaa.AGG with the given dimensions and default values
      */
     private void initAGG(int rows, int cols) {
         //inits each cell with [-10,0,1]
@@ -197,7 +199,7 @@ public class AGG {
     }
 
     /**
-     * inserts a double array into the AGG-dataTable
+     * inserts a double array into the smaa.AGG-dataTable
      *
      * @param values   double array
      * @param rowIndex Index to insert at

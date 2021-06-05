@@ -1,6 +1,8 @@
+import smaa_creation.AGG;
+import smaa_calculation.Utils;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class SMAA_Analyse_Tool {
     private JButton startButton;

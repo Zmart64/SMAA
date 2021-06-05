@@ -1,3 +1,7 @@
+package smaa_calculation;
+
+import smaa_creation.AGG;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -246,7 +250,7 @@ public class Utils {
      */
     public static void main(String[] args) {
         String pathVincent = "C:/UNI/04_Semester/example.csv";
-        String pathMarten = "C:/Users/admin/Downloads/scenario_5.csv";
+        String pathMarten = "C:/Users/admin/OneDrive/Dokumente/UNI/4. Semester/Softwareprojekt/SMAA/test/resources/small-fixed-agg.csv";
         String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
 
         String path = pathMarten;

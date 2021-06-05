@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import smaa_creation.AGG;
+
 import java.util.Arrays;
 
 public class AGGTest {
@@ -8,11 +10,11 @@ public class AGGTest {
     String scenario1 = "test/resources/scenario_1.csv";
 
     //5 rows, 8 + 1 columns
-    //two decisionmaker changed weightorder --> no impact on AGG
+    //two decisionmaker changed weightorder --> no impact on smaa.AGG
     String scenario2 = "test/resources/scenario_2.csv";
 
     //5 rows, 8 + 1 columns
-    //three decisionmaker changed weightorder --> changes AGG
+    //three decisionmaker changed weightorder --> changes smaa.AGG
     String scenario3 = "test/resources/scenario_3.csv";
 
     //3 rows, 3 + 1 columns
@@ -22,7 +24,7 @@ public class AGGTest {
     String scenario5 = "test/resources/scenario_5.csv";
 
     //3 rows, 3 + 1 columns
-    //5 decisionmaker changed weightorder --> same AGG as in scenario_4
+    //5 decisionmaker changed weightorder --> same smaa.AGG as in scenario_4
     String scenario6 = "test/resources/scenario_6.csv";
 
     @Test
