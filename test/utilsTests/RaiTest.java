@@ -12,8 +12,8 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class RaiTest {
 
-    private double[][] input;
-    private double[][] expected;
+    private final double[][] input;
+    private final double[][] expected;
 
     @Parameters(name = "Test for: {0} rai")
     public static Collection<Object[]> raiData () throws Exception {
