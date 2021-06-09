@@ -11,6 +11,7 @@ public class SMAA_Analyse_Tool {
     private JButton browseSourceButton;
     private JButton browseTargetButton;
     private JPanel mainPanel;
+    private boolean isMac;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("SMAA Analyse Tool");
@@ -24,7 +25,8 @@ public class SMAA_Analyse_Tool {
     }
 
     public SMAA_Analyse_Tool() {
-        if (System.getProperty("os.name").contains("Mac")) {
+        boolean isMac = System.getProperty("os.name").contains("Mac");
+        if (isMac) {
             targetTextField.setText(System.getProperty("user.home") + "/Downloads");
         } else {
             targetTextField.setText(System.getProperty("user.home") + "\\Downloads");
@@ -36,54 +38,71 @@ public class SMAA_Analyse_Tool {
     }
 
 
-    private void onBrowseSource() {
-        String inpath;
-        if (System.getProperty("os.name").contains("Mac")) {
-            inpath = getPathMAC(1);
-            if (inpath.contains("null")) inpath = "";
+    private void browse(String fileOrDir) {
+        String path;
+        if (isMac) {
+            path = getPathMac(fileOrDir);
         } else
-            inpath = getPathElse(1);
+            path = getPathOtherSystem(fileOrDir);
 
-        sourceTextField.setText(inpath);
+        if (fileOrDir.equals("file"))
+            sourceTextField.setText(path);
+        else
+            targetTextField.setText(path);
+    }
+
+    private void onBrowseSource() {
+        browse("file");
     }
 
     private void onBrowseTarget() {
-        String outpath;
-        if (System.getProperty("os.name").contains("Mac")) {
-            outpath = getPathMAC(2);
-            if (outpath.contains("null")) outpath = System.getProperty("user.home") + "/Downloads";
-        } else
-            outpath = getPathElse(2);
-
-        targetTextField.setText(outpath);
+        browse("dir");
     }
 
+    /**
+     * performs SMAA and outputs file
+     * **/
     private void onStart() {
-        String sourcePath = sourceTextField.getText();
-        AGG agg = new AGG(sourcePath);
-        double[][] raiTable = Utils.calculateRAI(agg, 100000);
+        try {
 
-        String pathToFile = targetTextField.getText() + "/RAI_table.csv";
-        Utils.exportCsv(raiTable, pathToFile);
-        JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
+            String sourcePath = sourceTextField.getText();
+            AGG agg = new AGG(sourcePath);
+            double[][] raiTable = Utils.calculateRAI(agg, 100000);
+
+            String pathToFile = targetTextField.getText() + "/RAI_table.csv";
+            Utils.exportCsv(raiTable, pathToFile);
+            JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Check if your file is formatted properly and ensure that the given paths are valid.",
+                    "SMAA FAILED", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
-    public String getPathMAC(int fileOrDir) {
+    public String getPathMac(String fileOrDir) {
         FileDialog d = new FileDialog(new JFrame(), "", FileDialog.LOAD);
-        if (fileOrDir == 1) {
+        if (fileOrDir.equals("file")) {
             System.setProperty("apple.awt.fileDialogForDirectories", "false");
             d.setFilenameFilter((dir, name) -> name.endsWith(".csv"));
         } else {
             System.setProperty("apple.awt.fileDialogForDirectories", "true");
         }
         d.setVisible(true);
-        return d.getDirectory() + d.getFile();
 
+        String path = d.getDirectory() + d.getFile();
+
+        if (path.contains("null")) {
+            if (fileOrDir.equals("file"))
+                return "";
+            else
+                return System.getProperty("user.home") + "/Downloads";
+        } else
+            return path;
     }
 
-    public String getPathElse(int fileOrDir) {
-        if (fileOrDir == 1) {
+    public String getPathOtherSystem(String fileOrDir) {
+        if (fileOrDir.equals("file")) {
             FileDialog d = new FileDialog(new JFrame(), "Please select a .csv-File", FileDialog.LOAD);
             d.setFile("*.csv");
             d.setVisible(true);
@@ -100,4 +119,5 @@ public class SMAA_Analyse_Tool {
 
         return "FAILED, PLEASE TRY AGAIN";
     }
+
 }
