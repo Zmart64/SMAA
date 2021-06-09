@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class AGG {
 
     private double[][][] dataTable;
-    private ArrayList<int[]> posToRandomizeAt = new ArrayList<>();
+    private final ArrayList<int[]> posToRandomizeAt = new ArrayList<>();
 
     public AGG(String path) {
 
