@@ -30,40 +30,44 @@ public class SMAA_Analyse_Tool {
             targetTextField.setText(System.getProperty("user.home") + "\\Downloads");
         }
 
-        browseSourceButton.addActionListener(actionEvent -> {
-            String inpath;
-            if (System.getProperty("os.name").contains("Mac")) {
-                inpath = getPathMAC(1);
-                if (inpath.contains("null")) inpath = "";
-            } else
-                inpath = getPathElse(1);
-
-            sourceTextField.setText(inpath);
-        });
-
-        browseTargetButton.addActionListener(actionEvent -> {
-            String outpath;
-            if (System.getProperty("os.name").contains("Mac")) {
-                outpath = getPathMAC(2);
-                if (outpath.contains("null")) outpath =  System.getProperty("user.home") + "/Downloads";
-            } else
-                outpath = getPathElse(2);
-
-            targetTextField.setText(outpath);
-
-
-        });
-
-        startButton.addActionListener(actionEvent -> {
-            String sourcePath = sourceTextField.getText();
-            AGG agg = new AGG(sourcePath);
-            double[][] raiTable = Utils.calculateRAI(agg, 100000);
-
-            String pathToFile = targetTextField.getText() + "/RAI_table.csv";
-            Utils.exportCsv(raiTable, pathToFile);
-            JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
-        });
+        browseSourceButton.addActionListener(actionEvent -> onBrowseSource());
+        browseTargetButton.addActionListener(actionEvent -> onBrowseTarget());
+        startButton.addActionListener(actionEvent -> onStart());
     }
+
+
+    private void onBrowseSource() {
+        String inpath;
+        if (System.getProperty("os.name").contains("Mac")) {
+            inpath = getPathMAC(1);
+            if (inpath.contains("null")) inpath = "";
+        } else
+            inpath = getPathElse(1);
+
+        sourceTextField.setText(inpath);
+    }
+
+    private void onBrowseTarget() {
+        String outpath;
+        if (System.getProperty("os.name").contains("Mac")) {
+            outpath = getPathMAC(2);
+            if (outpath.contains("null")) outpath = System.getProperty("user.home") + "/Downloads";
+        } else
+            outpath = getPathElse(2);
+
+        targetTextField.setText(outpath);
+    }
+
+    private void onStart() {
+        String sourcePath = sourceTextField.getText();
+        AGG agg = new AGG(sourcePath);
+        double[][] raiTable = Utils.calculateRAI(agg, 100000);
+
+        String pathToFile = targetTextField.getText() + "/RAI_table.csv";
+        Utils.exportCsv(raiTable, pathToFile);
+        JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
     public String getPathMAC(int fileOrDir) {
         FileDialog d = new FileDialog(new JFrame(), "", FileDialog.LOAD);
@@ -89,7 +93,7 @@ public class SMAA_Analyse_Tool {
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-            if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 return chooser.getSelectedFile().getPath();
             }
         }
