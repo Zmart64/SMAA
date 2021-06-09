@@ -61,7 +61,7 @@ public class SMAA_Analyse_Tool {
 
     /**
      * performs SMAA and outputs file
-     * **/
+     **/
     private void onStart() {
         try {
 
@@ -81,22 +81,19 @@ public class SMAA_Analyse_Tool {
 
 
     public String getPathMac(String fileOrDir) {
-        FileDialog d = new FileDialog(new JFrame(), "", FileDialog.LOAD);
+        FileDialog dialog = new FileDialog(new JFrame(), "", FileDialog.LOAD);
         if (fileOrDir.equals("file")) {
             System.setProperty("apple.awt.fileDialogForDirectories", "false");
-            d.setFilenameFilter((dir, name) -> name.endsWith(".csv"));
+            dialog.setFilenameFilter((dir, name) -> name.endsWith(".csv"));
         } else {
             System.setProperty("apple.awt.fileDialogForDirectories", "true");
         }
-        d.setVisible(true);
+        dialog.setVisible(true);
 
-        String path = d.getDirectory() + d.getFile();
+        String path = dialog.getDirectory() + dialog.getFile();
 
-        if (path.contains("null")) {
-            if (fileOrDir.equals("file"))
-                return "";
-            else
-                return System.getProperty("user.home") + "/Downloads";
+        if (path.contains("null") && fileOrDir.equals("dir")) {
+            return System.getProperty("user.home") + "/Downloads";
         } else
             return path;
     }
@@ -117,7 +114,7 @@ public class SMAA_Analyse_Tool {
             }
         }
 
-        return "FAILED, PLEASE TRY AGAIN";
+        return System.getProperty("user.home") + "\\Downloads";
     }
 
 }
