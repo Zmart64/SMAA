@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+/**
+ * Provides methods to perform SMAA
+ */
 public class Utils {
 
     /**
@@ -105,72 +108,6 @@ public class Utils {
 
 
     /**
-     * generates new csv file and writes rai values into it
-     */
-    public static void exportCsv(double[][] raiTable, String pathToFile) {
-
-        try {
-            //creates new file
-            FileWriter file = new FileWriter(pathToFile);
-            PrintWriter writer = new PrintWriter(file);
-            printRaiTable(raiTable, writer);
-            printRecommendation(raiTable, writer);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /** prints RaiTable into .csv-file**/
-    private static void printRaiTable(double[][] raiTable, PrintWriter writer) throws IOException {
-        writer.println("Calculated RAIs:");
-        writer.println();
-
-        //first row
-        writer.print("Rank;");
-        for (int i = 0; i < raiTable[0].length; i++) {
-            if (i < raiTable[0].length - 1)
-                writer.print("a" + (i + 1) + ";");
-            else
-                writer.print("a" + (i + 1));
-        }
-
-        //print all rai values per rank
-        for (int rank = 0; rank < raiTable.length; rank++) {
-            writer.println();
-            writer.print(rank + 1 + ";");
-            for (int alt = 0; alt < raiTable[0].length; alt++) {
-                if (alt < raiTable[0].length - 1)
-                    writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ",") + ";");
-                else
-                    writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ","));
-            }
-        }
-    }
-
-    /** prints Recommendation .csv-file
-     * minimal percentual difference is customizable
-     * **/
-    private static void printRecommendation(double[][] raiTable, PrintWriter writer) throws IOException {
-        List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
-
-        writer.println();
-        writer.println();
-
-        if (discards.isEmpty()) {
-            writer.println("The alternative-scores are not distinguishable enough. \n " +
-                    "Re-evaluate your decisions and restart the SMAA.");
-        } else {
-            writer.print("The following alternatives should be discarded: ");
-            writer.println();
-            for (Integer discard : discards) {
-                writer.println(discard);
-            }
-        }
-    }
-
-
-    /**
      * calculates totalpoints for each alternative
      * points on rank i is weighted with lastRank-i+1
      *
@@ -239,6 +176,75 @@ public class Utils {
 
         return discards;
     }
+
+
+    /**
+     * generates new csv file and writes rai values into it
+     */
+    public static void exportCsv(double[][] raiTable, String pathToFile) {
+
+        try {
+            //creates new file
+            FileWriter file = new FileWriter(pathToFile);
+            PrintWriter writer = new PrintWriter(file);
+            printRaiTable(raiTable, writer);
+            printRecommendation(raiTable, writer);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** prints RaiTable into .csv-file**/
+    private static void printRaiTable(double[][] raiTable, PrintWriter writer) throws IOException {
+        writer.println("Calculated RAIs:");
+        writer.println();
+
+        //first row
+        writer.print("Rank;");
+        for (int i = 0; i < raiTable[0].length; i++) {
+            if (i < raiTable[0].length - 1)
+                writer.print("a" + (i + 1) + ";");
+            else
+                writer.print("a" + (i + 1));
+        }
+
+        //print all rai values per rank
+        for (int rank = 0; rank < raiTable.length; rank++) {
+            writer.println();
+            writer.print(rank + 1 + ";");
+            for (int alt = 0; alt < raiTable[0].length; alt++) {
+                if (alt < raiTable[0].length - 1)
+                    writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ",") + ";");
+                else
+                    writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ","));
+            }
+        }
+    }
+
+    /** prints Recommendation .csv-file
+     * minimal percentual difference is customizable
+     * **/
+    private static void printRecommendation(double[][] raiTable, PrintWriter writer) throws IOException {
+        List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
+
+        writer.println();
+        writer.println();
+
+        if (discards.isEmpty()) {
+            writer.println("The alternative-scores are not distinguishable enough. \n " +
+                    "Re-evaluate your decisions and restart the SMAA.");
+        } else {
+            writer.print("The following alternatives should be discarded: ");
+            writer.println();
+            for (Integer discard : discards) {
+                writer.println(discard);
+            }
+        }
+    }
+
+
+
 
 
 

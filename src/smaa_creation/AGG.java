@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * Provides methods to create an AGG-table from a given .csv-file
+ */
 public class AGG {
 
     private double[][][] dataTable;
@@ -39,6 +42,77 @@ public class AGG {
 
     public ArrayList<int[]> getRandPositions() {
         return posToRandomizeAt;
+    }
+
+
+    /**
+     * initializes smaa.AGG with the given dimensions and default values
+     */
+    private void initAGG(int rows, int cols) {
+        //inits each cell with [-10,0,1]
+        dataTable = new double[rows][cols][3];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                dataTable[i][j][0] = -10.0;
+                dataTable[i][j][1] = 0.0;
+                dataTable[i][j][2] = 1.0;
+            }
+        }
+    }
+
+    /**
+     * creates dataTable, defines posToRandomizeAt
+     *
+     * @param path path to .csv file which shall be analysed
+     */
+    private void csvToAGG(String path) {
+        int currentRow = 0;
+
+        //read all lines into rows, skip DM rows + empty lines
+        try {
+            File file = new File(path);
+            Scanner reader = new Scanner(file);
+            while (reader.hasNextLine()) {
+
+                String currentLine = reader.nextLine();
+
+                //case: line contains relevant values
+                if (currentLine.contains("c") && !currentLine.contains("G")) {
+                    double[] doubleArray = stringToDoubleArray(modifyString(currentLine));
+                    insertArrayIntoAGG(doubleArray, currentRow);
+                    currentRow++;
+
+                    //case:DM /first row of a table
+                } else if (currentLine.contains("DM")) {
+                    currentRow = 0;
+                }
+                //else: Gewichte or empty line -> ignore
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * inits class-variable PositionsToRandomizeAt, which saves all indices where values shall be randomized
+     * (first Element in Cell is 10 or -10 if there is an interval)
+     */
+    private void initPositionsToRandomizeAt() {
+
+        int[] index;
+
+        for (int i = 0; i < dataTable.length; i++) {
+            for (int j = 0; j < dataTable[0].length; j++) {
+                if (dataTable[i][j][0] == -10 || dataTable[i][j][0] == 10) {
+                    index = new int[2];
+                    index[0] = i;
+                    index[1] = j;
+                    posToRandomizeAt.add(index);
+                }
+            }
+        }
     }
 
 
@@ -104,57 +178,6 @@ public class AGG {
 
 
     /**
-     * initializes smaa.AGG with the given dimensions and default values
-     */
-    private void initAGG(int rows, int cols) {
-        //inits each cell with [-10,0,1]
-        dataTable = new double[rows][cols][3];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                dataTable[i][j][0] = -10.0;
-                dataTable[i][j][1] = 0.0;
-                dataTable[i][j][2] = 1.0;
-
-            }
-        }
-    }
-
-    /**
-     * creates dataTable, defines posToRandomizeAt
-     *
-     * @param path path to .csv file which shall be analysed
-     */
-    private void csvToAGG(String path) {
-        int currentRow = 0;
-
-        //read all lines into rows, skip DM rows + empty lines
-        try {
-            File file = new File(path);
-            Scanner reader = new Scanner(file);
-            while (reader.hasNextLine()) {
-
-                String currentLine = reader.nextLine();
-
-                //case: line contains relevant values
-                if (currentLine.contains("c") && !currentLine.contains("G")) {
-                    double[] doubleArray = stringToDoubleArray(modifyString(currentLine));
-                    insertArrayIntoAGG(doubleArray, currentRow);
-                    currentRow++;
-
-                //case:DM /first row of a table
-                } else if (currentLine.contains("DM")) {
-                    currentRow = 0;
-                }
-                //else: Gewichte or empty line -> ignore
-            }
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * filters all values out of the given line and replaces missing values with a default value (-1)
      *
      * @return string, format(example): ;1.0;0.5;-1.0;
@@ -175,7 +198,6 @@ public class AGG {
 
         return modified;
     }
-
 
     /**
      * converts formatted String to a double Array
@@ -224,7 +246,7 @@ public class AGG {
                     dataTable[rowIndex][i][1] = currValue;
                 if (currValue > dataTable[rowIndex][i][2])
                     dataTable[rowIndex][i][2] = currValue;
-            //case: one value so far -> new Interval if different
+                //case: one value so far -> new Interval if different
             } else {
                 if (currValue > dataTable[rowIndex][i][0]) {
                     dataTable[rowIndex][i][1] = dataTable[rowIndex][i][0];
@@ -234,26 +256,6 @@ public class AGG {
                     dataTable[rowIndex][i][1] = currValue;
                     dataTable[rowIndex][i][2] = dataTable[rowIndex][i][0];
                     dataTable[rowIndex][i][0] = 10;
-                }
-            }
-        }
-    }
-
-    /**
-     * inits class-variable PositionsToRandomizeAt, which saves all indices where values shall be randomized
-     * (first Element in Cell is 10 or -10 if there is an interval)
-     */
-    private void initPositionsToRandomizeAt() {
-
-        int[] index;
-
-        for (int i = 0; i < dataTable.length; i++) {
-            for (int j = 0; j < dataTable[0].length; j++) {
-                if (dataTable[i][j][0] == -10 || dataTable[i][j][0] == 10) {
-                    index = new int[2];
-                    index[0] = i;
-                    index[1] = j;
-                    posToRandomizeAt.add(index);
                 }
             }
         }

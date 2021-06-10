@@ -4,6 +4,9 @@ import smaa_calculation.Utils;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * provides a GUI for easy Interaction
+ */
 public class SMAA_Analyse_Tool {
     private JButton startButton;
     private JTextField sourceTextField;
@@ -13,6 +16,9 @@ public class SMAA_Analyse_Tool {
     private JPanel mainPanel;
     private boolean isMac;
 
+    /**
+     * setting up Analyse Tool (no functionality)
+     */
     public static void main(String[] args) {
         JFrame frame = new JFrame("SMAA Analyse Tool");
         frame.setContentPane(new SMAA_Analyse_Tool().mainPanel);
@@ -24,6 +30,9 @@ public class SMAA_Analyse_Tool {
         frame.setVisible(true);
     }
 
+    /**
+     * setting up functionality of Analyse-Tool
+     */
     public SMAA_Analyse_Tool() {
         boolean isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
