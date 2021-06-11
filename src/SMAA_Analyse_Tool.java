@@ -34,7 +34,7 @@ public class SMAA_Analyse_Tool {
      * setting up functionality of Analyse-Tool
      */
     public SMAA_Analyse_Tool() {
-        boolean isMac = System.getProperty("os.name").contains("Mac");
+        isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
             targetTextField.setText(System.getProperty("user.home") + "/Downloads");
         } else {
@@ -78,7 +78,8 @@ public class SMAA_Analyse_Tool {
             AGG agg = new AGG(sourcePath);
             double[][] raiTable = Utils.calculateRAI(agg, 100000);
 
-            String pathToFile = targetTextField.getText() + "/RAI_table.csv";
+            //String pathToFile = targetTextField.getText() + "/RAI_table.csv";
+            String pathToFile = targetTextField.getText() + "/output_" + sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('/')+1);
             Utils.exportCsv(raiTable, pathToFile);
             JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -98,13 +99,15 @@ public class SMAA_Analyse_Tool {
             System.setProperty("apple.awt.fileDialogForDirectories", "true");
         }
         dialog.setVisible(true);
-
         String path = dialog.getDirectory() + dialog.getFile();
 
         if (path.contains("null") && fileOrDir.equals("dir")) {
-            return System.getProperty("user.home") + "/Downloads";
-        } else
-            return path;
+            path = System.getProperty("user.home") + "/Downloads";
+        }
+        else if (path.contains("null") && fileOrDir.equals("file")){
+            path = "";
+        }
+        return path;
     }
 
     public String getPathOtherSystem(String fileOrDir) {
