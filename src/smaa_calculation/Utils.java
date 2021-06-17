@@ -195,7 +195,9 @@ public class Utils {
         }
     }
 
-    /** prints RaiTable into .csv-file**/
+    /**
+     * prints RaiTable into .csv-file
+     **/
     private static void printRaiTable(double[][] raiTable, PrintWriter writer) throws IOException {
         writer.println("Calculated RAIs:");
         writer.println();
@@ -222,9 +224,10 @@ public class Utils {
         }
     }
 
-    /** prints Recommendation .csv-file
+    /**
+     * prints Recommendation .csv-file
      * minimal percentual difference is customizable
-     * **/
+     **/
     private static void printRecommendation(double[][] raiTable, PrintWriter writer) throws IOException {
         List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
 
@@ -241,34 +244,6 @@ public class Utils {
                 writer.println(discard);
             }
         }
-    }
-
-
-
-
-
-
-    // TODO: remove before final commit (also: remove all System.out.println in all classes!)
-    /**
-     * only needed for testing atm
-     *
-     * @param args nothing
-     */
-    public static void main(String[] args) {
-        String pathVincent = "C:/UNI/04_Semester/example.csv";
-        String pathMarten = "C:/Users/admin/OneDrive/Dokumente/UNI/4. Semester/Softwareprojekt/SMAA/test/resources/medium-fixed-agg.csv";
-        String pathEdgar = "/Users/edgar/Documents/4 Semester/Softwareprojekt/my-swp-example.csv";
-
-        String path = pathMarten;
-        AGG agg = new AGG(path);
-
-        double[][] raiTable = calculateRAI(agg, 100000);
-
-
-        decideExclusion(getPercentageDifference(raiTable), 20);
-
-//        String outputPath = "C:/UNI/04_Semester";
-//        exportRaiTable(raiTable, outputPath);
     }
 }
 

@@ -1,8 +1,8 @@
 package smaa_creation;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -22,18 +22,6 @@ public class AGG {
         csvToAGG(path);
 
         initPositionsToRandomizeAt();
-
-        // TODO: delete before commiting final version
-        {
-            System.out.println("AGG_Table: ");
-            for (double[][] rows : dataTable) {
-                System.out.println(Arrays.deepToString(rows));
-            }
-
-            System.out.println("posToRandomizeAt: ");
-            System.out.println(Arrays.deepToString(posToRandomizeAt.toArray()));
-        }
-
     }
 
     public double[][][] getAGG() {

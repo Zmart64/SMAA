@@ -14,7 +14,7 @@ public class SMAA_Analyse_Tool {
     private JButton browseSourceButton;
     private JButton browseTargetButton;
     private JPanel mainPanel;
-    private boolean isMac;
+    private final boolean isMac;
 
     /**
      * setting up Analyse Tool (no functionality)
@@ -78,8 +78,10 @@ public class SMAA_Analyse_Tool {
             AGG agg = new AGG(sourcePath);
             double[][] raiTable = Utils.calculateRAI(agg, 100000);
 
-            //String pathToFile = targetTextField.getText() + "/RAI_table.csv";
-            String pathToFile = targetTextField.getText() + "/output_" + sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('/')+1);
+            String fileName = isMac ? sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('/') + 1)
+                    : sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('\\') + 1);
+            String pathToFile = targetTextField.getText() + "/output_" + fileName;
+
             Utils.exportCsv(raiTable, pathToFile);
             JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -103,8 +105,7 @@ public class SMAA_Analyse_Tool {
 
         if (path.contains("null") && fileOrDir.equals("dir")) {
             path = System.getProperty("user.home") + "/Downloads";
-        }
-        else if (path.contains("null") && fileOrDir.equals("file")){
+        } else if (path.contains("null") && fileOrDir.equals("file")) {
             path = "";
         }
         return path;
