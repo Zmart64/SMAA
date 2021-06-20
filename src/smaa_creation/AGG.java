@@ -3,6 +3,7 @@ package smaa_creation;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -28,7 +29,7 @@ public class AGG {
         return dataTable;
     }
 
-    public ArrayList<int[]> getRandPositions() {
+    public List<int[]> getRandPositions() {
         return posToRandomizeAt;
     }
 

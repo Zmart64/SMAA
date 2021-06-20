@@ -1,12 +1,12 @@
-package utilsTestsTools;
+package utils_tests_tools;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import smaa_creation.AGG;
 
-public class AGG_Test_Entity {
+import java.util.List;
 
-    private AGG agg;
+public class AGGTestEntity {
+
     @JsonProperty("name")
     public String name;
     @JsonProperty("ranking")
@@ -20,15 +20,11 @@ public class AGG_Test_Entity {
     @JsonProperty("exclusion")
     private List<Integer> exclusion;
 
-    public AGG_Test_Entity() {
-    }
-
     public AGG getAgg() {
-        this.agg = new AGG("test/resources/" + this.name);
-        return agg;
+        return new AGG("test/resources/" + this.name);
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 

@@ -5,12 +5,17 @@ import smaa_creation.AGG;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Provides methods to perform SMAA
  */
-public class Utils {
+public final class Utils {
+
+    private Utils() {
+    }
 
     /**
      * calculates ranking for dataTable
@@ -56,7 +61,7 @@ public class Utils {
      */
     private static void generateRandomValues(AGG agg) {
 
-        ArrayList<int[]> posToRandomize = agg.getRandPositions();
+        List<int[]> posToRandomize = agg.getRandPositions();
         double[][][] dataTable = agg.getAGG();
 
         for (int[] index : posToRandomize) {
@@ -198,7 +203,7 @@ public class Utils {
     /**
      * prints RaiTable into .csv-file
      **/
-    private static void printRaiTable(double[][] raiTable, PrintWriter writer) throws IOException {
+    private static void printRaiTable(double[][] raiTable, PrintWriter writer) {
         writer.println("Calculated RAIs:");
         writer.println();
 
@@ -228,7 +233,7 @@ public class Utils {
      * prints Recommendation .csv-file
      * minimal percentual difference is customizable
      **/
-    private static void printRecommendation(double[][] raiTable, PrintWriter writer) throws IOException {
+    private static void printRecommendation(double[][] raiTable, PrintWriter writer) {
         List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
 
         writer.println();

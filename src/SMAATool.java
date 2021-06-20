@@ -1,5 +1,5 @@
-import smaa_creation.AGG;
 import smaa_calculation.Utils;
+import smaa_creation.AGG;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +15,7 @@ public class SMAATool {
     private JButton browseTargetButton;
     private JPanel mainPanel;
     private final boolean isMac;
+    private String home = "user.home";
 
     /**
      * setting up Analyse Tool (no functionality)
@@ -22,7 +23,7 @@ public class SMAATool {
     public static void main(String[] args) {
         JFrame frame = new JFrame("SMAA Analyse Tool");
         frame.setContentPane(new SMAATool().mainPanel);
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
 
         //center window
@@ -36,9 +37,9 @@ public class SMAATool {
     public SMAATool() {
         isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
-            targetTextField.setText(System.getProperty("user.home") + "/Downloads");
+            targetTextField.setText(System.getProperty(home) + "/Downloads");
         } else {
-            targetTextField.setText(System.getProperty("user.home") + "\\Downloads");
+            targetTextField.setText(System.getProperty(home) + "\\Downloads");
         }
 
         browseSourceButton.addActionListener(actionEvent -> onBrowseSource());
@@ -104,7 +105,7 @@ public class SMAATool {
         String path = dialog.getDirectory() + dialog.getFile();
 
         if (path.contains("null") && fileOrDir.equals("dir")) {
-            path = System.getProperty("user.home") + "/Downloads";
+            path = System.getProperty(home) + "/Downloads";
         } else if (path.contains("null") && fileOrDir.equals("file")) {
             path = "";
         }
@@ -127,7 +128,7 @@ public class SMAATool {
             }
         }
 
-        return System.getProperty("user.home") + "\\Downloads";
+        return System.getProperty(home) + "\\Downloads";
     }
 
 }

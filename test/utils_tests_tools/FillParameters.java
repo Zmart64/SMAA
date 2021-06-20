@@ -1,16 +1,17 @@
-package utilsTestsTools;
+package utils_tests_tools;
 
 import smaa_calculation.Utils;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class FillParameters {
     public Collection<Object[]> fillParameters(String type) throws Exception {
         //initialize parser
         JsonParser parser = new JsonParser();
-        List<AGG_Test_Entity> entities = parser.readAGGEntitiesFromJson("test/resources/agg_calculation_results.json");
+        List<AGGTestEntity> entities = parser.readAGGEntitiesFromJson("test/resources/agg_calculation_results.json");
 
         Object[][] result = new Object[entities.size()][3];
 
@@ -49,6 +50,9 @@ public class FillParameters {
                     result[i][1] = Utils.decideExclusion(Utils.getPercentageDifference(Utils.calculateRAI(entities.get(i).getAgg(), 10000)), 20);
                     result[i][2] = entities.get(i).getExclusion();
                 }
+                break;
+            default:
+                throw new NoSuchElementException("Please look at your input for the filling parameter.");
         }
 
         return Arrays.asList(result);

@@ -1,10 +1,10 @@
-package utilsTests;
+package utils_tests;
 
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import utilsTestsTools.FillParameters;
+import utils_tests_tools.FillParameters;
 
 import java.util.Collection;
 
