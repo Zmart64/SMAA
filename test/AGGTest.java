@@ -1,5 +1,5 @@
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import smaa_creation.AGG;
 
 import java.util.Arrays;

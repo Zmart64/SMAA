@@ -5,13 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import smaa_calculation.Utils;
-import utilsTestsTools.AGG_Test_Entity;
 import utilsTestsTools.FillParameters;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @RunWith(Parameterized.class)
 public class RankingTest {

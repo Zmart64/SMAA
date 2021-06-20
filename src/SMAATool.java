@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * provides a GUI for easy Interaction
  */
-public class SMAA_Analyse_Tool {
+public class SMAATool {
     private JButton startButton;
     private JTextField sourceTextField;
     private JTextField targetTextField;
@@ -21,8 +21,8 @@ public class SMAA_Analyse_Tool {
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("SMAA Analyse Tool");
-        frame.setContentPane(new SMAA_Analyse_Tool().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(new SMAATool().mainPanel);
+        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
         frame.pack();
 
         //center window
@@ -33,7 +33,7 @@ public class SMAA_Analyse_Tool {
     /**
      * setting up functionality of Analyse-Tool
      */
-    public SMAA_Analyse_Tool() {
+    public SMAATool() {
         isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
             targetTextField.setText(System.getProperty("user.home") + "/Downloads");
