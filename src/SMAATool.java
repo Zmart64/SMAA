@@ -15,13 +15,13 @@ public class SMAATool {
     private JButton browseTargetButton;
     private JPanel mainPanel;
     private final boolean isMac;
-    private String home = "user.home";
+    private final String home = "user.home";
 
     /**
      * setting up Analyse Tool (no functionality)
      */
     public static void main(String[] args) {
-        JFrame frame = new JFrame("SMAA Analyse Tool");
+        JFrame frame = new JFrame("SMAA Tool");
         frame.setContentPane(new SMAATool().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -77,7 +77,7 @@ public class SMAATool {
 
             String sourcePath = sourceTextField.getText();
             AGG agg = new AGG(sourcePath);
-            double[][] raiTable = Utils.calculateRAI(agg, 100000);
+            double[][] raiTable = Utils.calculateRAI(agg, 10000);
 
             String fileName = isMac ? sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('/') + 1)
                     : sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('\\') + 1);

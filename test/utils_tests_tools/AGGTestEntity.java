@@ -3,6 +3,7 @@ package utils_tests_tools;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import smaa_creation.AGG;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class AGGTestEntity {
@@ -20,7 +21,7 @@ public class AGGTestEntity {
     @JsonProperty("exclusion")
     private List<Integer> exclusion;
 
-    public AGG getAgg() {
+    public AGG getAgg() throws FileNotFoundException {
         return new AGG("test/resources/" + this.name);
     }
 

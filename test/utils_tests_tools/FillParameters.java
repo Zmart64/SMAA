@@ -40,14 +40,14 @@ public class FillParameters {
             case "percentageDifference":
                 for (int i = 0; i < entities.size(); i++) {
                     result[i][0] = entities.get(i).getName();
-                    result[i][1] = Utils.getPercentageDifference(Utils.calculateRAI(entities.get(i).getAgg(), 10000));
+                    result[i][1] = Utils.getPercentageDifferences(Utils.calculateRAI(entities.get(i).getAgg(), 10000));
                     result[i][2] = entities.get(i).getPercentageDifference();
                 }
                 break;
             case "exclusion":
                 for (int i = 0; i < entities.size(); i++) {
                     result[i][0] = entities.get(i).getName();
-                    result[i][1] = Utils.decideExclusion(Utils.getPercentageDifference(Utils.calculateRAI(entities.get(i).getAgg(), 10000)), 20);
+                    result[i][1] = Utils.decideExclusion(Utils.getPercentageDifferences(Utils.calculateRAI(entities.get(i).getAgg(), 10000)), 20);
                     result[i][2] = entities.get(i).getExclusion();
                 }
                 break;

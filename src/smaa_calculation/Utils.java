@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Provides methods to perform SMAA
+ * Provides several methods to perform SMAA based on an AGG-table
  */
 public final class Utils {
 
@@ -105,16 +105,13 @@ public final class Utils {
             }
         }
 
-        System.out.println("RAI-Table: ");
-        System.out.println(Arrays.deepToString(raiTable));
-
         return raiTable;
     }
 
 
     /**
      * calculates totalpoints for each alternative
-     * points on rank i is weighted with lastRank-i+1
+     * points(actually a percentage) on rank i is weighted with lastRank-i+1
      *
      * @param raiTable
      * @return array with totalpoints for each alternative, index = number of alternative
@@ -136,28 +133,23 @@ public final class Utils {
      * @param raiTable
      * @return double array with percentual Differences, index = number of the alternative
      */
-    public static double[] getPercentageDifference(double[][] raiTable) {
+    public static double[] getPercentageDifferences(double[][] raiTable) {
         double[] totalpoints = calculateTotalPoints(raiTable);
-        System.out.println("totalpoints: " + Arrays.toString(totalpoints));
 
         //search maximum
-        int maxIndex = 0;
         double max = totalpoints[0];
         for (int i = 1; i < totalpoints.length; i++) {
             if (max < totalpoints[i]) {
                 max = totalpoints[i];
-                maxIndex = i;
             }
         }
 
-        System.out.println("Maximum Alternative: " + maxIndex + " points: " + max);
-
-        //calculate percentageDifferences
+        //calculate percentageDifferences and round them
         double[] percentages = new double[totalpoints.length];
         for (int i = 0; i < percentages.length; i++) {
             percentages[i] = Math.round((max - totalpoints[i]) / max * 10000 / 100);
         }
-        System.out.println("percentual differences: " + Arrays.toString(percentages));
+
         return percentages;
     }
 
@@ -177,8 +169,6 @@ public final class Utils {
             }
         }
 
-        System.out.println("Alternatives to be discarded: " + Arrays.toString(discards.toArray()));
-
         return discards;
     }
 
@@ -186,26 +176,71 @@ public final class Utils {
     /**
      * generates new csv file and writes rai values into it
      */
-    public static void exportCsv(double[][] raiTable, String pathToFile) {
+    public static void exportCsv(double[][] raiTable, String pathToFile) throws IOException {
+        //creates new file
+        FileWriter file = new FileWriter(pathToFile);
+        PrintWriter writer = new PrintWriter(file);
 
-        try {
-            //creates new file
-            FileWriter file = new FileWriter(pathToFile);
-            PrintWriter writer = new PrintWriter(file);
-            printRaiTable(raiTable, writer);
-            printRecommendation(raiTable, writer);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        writer.println("Results of the Stochastic Multicriteria Acceptability Analysis:");
+        writer.println();
+
+        printRecommendation(raiTable, writer);
+        printPercentageDifferences(raiTable, writer);
+        printRaiTable(raiTable, writer);
+
+        writer.close();
+
+    }
+
+    /**
+     * prints Recommendation .csv-file
+     * minimal percentual difference is customizable
+     **/
+    private static void printRecommendation(double[][] raiTable, PrintWriter writer) {
+        List<Integer> discards = decideExclusion(getPercentageDifferences(raiTable), 15);
+
+        if (discards.isEmpty()) {
+            writer.println("Due to very similar scores for all alternatives, no alternatives can be excluded.\n" +
+                    "If possible, please re-evaluate your decisions and run the SMAA once again.");
+        } else {
+            writer.print("The following alternatives should be discarded: ");
+            writer.println();
+            for (Integer discard : discards) {
+                writer.println(discard);
+            }
         }
+        writer.println();
+    }
+
+    /**
+     * prints Percentage Differences as a table into .csv-file
+     */
+    private static void printPercentageDifferences(double[][] raiTable, PrintWriter writer) {
+        double[] percentages = getPercentageDifferences(raiTable);
+
+        writer.println("Percentage Differences (referring to the best alternative): ");
+
+        for (int i = 0; i < percentages.length; i++) {
+            writer.print("a" + (i + 1));
+            if (i != percentages.length - 1)
+                writer.print(";");
+        }
+        writer.println();
+        for (int i = 0; i < percentages.length; i++) {
+            writer.print(percentages[i]);
+            if (i != percentages.length - 1)
+                writer.print(";");
+        }
+        writer.println();
+
     }
 
     /**
      * prints RaiTable into .csv-file
      **/
     private static void printRaiTable(double[][] raiTable, PrintWriter writer) {
-        writer.println("Calculated RAIs:");
         writer.println();
+        writer.println("Calculated RAIs:");
 
         //first row
         writer.print("Rank;");
@@ -229,26 +264,6 @@ public final class Utils {
         }
     }
 
-    /**
-     * prints Recommendation .csv-file
-     * minimal percentual difference is customizable
-     **/
-    private static void printRecommendation(double[][] raiTable, PrintWriter writer) {
-        List<Integer> discards = decideExclusion(getPercentageDifference(raiTable), 20);
 
-        writer.println();
-        writer.println();
-
-        if (discards.isEmpty()) {
-            writer.println("The alternative-scores are not distinguishable enough. \n " +
-                    "Re-evaluate your decisions and restart the SMAA.");
-        } else {
-            writer.print("The following alternatives should be discarded: ");
-            writer.println();
-            for (Integer discard : discards) {
-                writer.println(discard);
-            }
-        }
-    }
 }
 

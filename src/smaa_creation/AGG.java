@@ -14,7 +14,7 @@ public class AGG {
     private double[][][] dataTable;
     private final ArrayList<int[]> posToRandomizeAt = new ArrayList<>();
 
-    public AGG(String path) {
+    public AGG(String path) throws FileNotFoundException {
 
         String firstDM = copyFirstDmTable(path);
         int[] dimensions = countRowsAndCols(firstDM);
@@ -55,33 +55,31 @@ public class AGG {
      *
      * @param path path to .csv file which shall be analysed
      */
-    private void csvToAGG(String path) {
+    private void csvToAGG(String path) throws FileNotFoundException {
         int currentRow = 0;
 
         //read all lines into rows, skip DM rows + empty lines
-        try {
-            File file = new File(path);
-            Scanner reader = new Scanner(file);
-            while (reader.hasNextLine()) {
 
-                String currentLine = reader.nextLine();
+        File file = new File(path);
+        Scanner reader = new Scanner(file);
+        while (reader.hasNextLine()) {
 
-                //case: line contains relevant values
-                if (currentLine.contains("c") && !currentLine.contains("G")) {
-                    double[] doubleArray = stringToDoubleArray(modifyString(currentLine));
-                    insertArrayIntoAGG(doubleArray, currentRow);
-                    currentRow++;
+            String currentLine = reader.nextLine();
 
-                    //case:DM /first row of a table
-                } else if (currentLine.contains("DM")) {
-                    currentRow = 0;
-                }
-                //else: Gewichte or empty line -> ignore
+            //case: line contains relevant values
+            if (currentLine.contains("c") && !currentLine.contains("G")) {
+                double[] doubleArray = stringToDoubleArray(modifyString(currentLine));
+                insertArrayIntoAGG(doubleArray, currentRow);
+                currentRow++;
+
+                //case:DM /first row of a table
+            } else if (currentLine.contains("DM")) {
+                currentRow = 0;
             }
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //else: Gewichte or empty line -> ignore
         }
+        reader.close();
+
     }
 
     /**
@@ -137,30 +135,25 @@ public class AGG {
      * copies dataTable of first Decision Maker.
      * Method is used to be able to count Rows and Cols
      */
-    private static String copyFirstDmTable(String path) {
+    private static String copyFirstDmTable(String path) throws FileNotFoundException {
 
         String target = "DM";
         int counter = 0;
 
         StringBuilder data = new StringBuilder();
 
-        try {
-            File myObj = new File(path);
-            Scanner myReader = new Scanner(myObj);
-            while (counter <= 1 && myReader.hasNextLine()) {
-                String t = myReader.nextLine();
-                data.append(t);
+        File myObj = new File(path);
+        Scanner myReader = new Scanner(myObj);
+        while (counter <= 1 && myReader.hasNextLine()) {
+            String t = myReader.nextLine();
+            data.append(t);
 
-                if (t.contains(target)) {
-                    counter++;
-                }
+            if (t.contains(target)) {
+                counter++;
             }
-
-            myReader.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+
+        myReader.close();
 
         return data.toString();
     }
