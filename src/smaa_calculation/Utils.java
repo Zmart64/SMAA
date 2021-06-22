@@ -110,7 +110,8 @@ public final class Utils {
 
 
     /**
-     * calculates totalpoints for each alternative
+     * calculates totalpoints for each alternative, only ranks 1 to 3 are relevant
+     * lower ranks are not important enough
      * points(actually a percentage) on rank i is weighted with lastRank-i+1
      *
      * @param raiTable
@@ -119,7 +120,7 @@ public final class Utils {
     public static double[] calculateTotalPoints(double[][] raiTable) {
         double[] totalpoints = new double[raiTable.length];
         for (int alt = 0; alt < totalpoints.length; alt++) {
-            for (int rank = 0; rank < totalpoints.length; rank++) {
+            for (int rank = 0; rank < totalpoints.length && rank < 3; rank++) {
                 //weight = length-(rank-1)
                 totalpoints[alt] += (totalpoints.length - rank) * raiTable[alt][rank];
             }
@@ -197,7 +198,7 @@ public final class Utils {
      * minimal percentual difference is customizable
      **/
     private static void printRecommendation(double[][] raiTable, PrintWriter writer) {
-        List<Integer> discards = decideExclusion(getPercentageDifferences(raiTable), 15);
+        List<Integer> discards = decideExclusion(getPercentageDifferences(raiTable), 10);
 
         if (discards.isEmpty()) {
             writer.println("Due to very similar scores for all alternatives, no alternatives can be excluded.\n" +
