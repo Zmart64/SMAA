@@ -1,8 +1,12 @@
 import smaa_calculation.Utils;
 import smaa_creation.AGG;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.swing.ImageIcon;
 
 /**
  * provides a GUI for easy Interaction
@@ -14,14 +18,16 @@ public class SMAATool {
     private JButton browseSourceButton;
     private JButton browseTargetButton;
     private JPanel mainPanel;
+    private JLabel imgLabel;
     private final boolean isMac;
     private final String home = "user.home";
+    ImageIcon imageTest1 = new ImageIcon("test/resources/Logo_ohneText.png");
 
     /**
      * setting up Analyse Tool (no functionality)
      */
     public static void main(String[] args) {
-        JFrame frame = new JFrame("SMAA Tool");
+        JFrame frame = new JFrame("SMAArt Tool");
         frame.setContentPane(new SMAATool().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -29,12 +35,15 @@ public class SMAATool {
         //center window
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
     }
 
     /**
      * setting up functionality of Analyse-Tool
      */
     public SMAATool() {
+        imgLabel.setIcon(imageTest1);
+
         isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
             targetTextField.setText(System.getProperty(home) + "/Downloads");
@@ -130,5 +139,4 @@ public class SMAATool {
 
         return System.getProperty(home) + "\\Downloads";
     }
-
 }
