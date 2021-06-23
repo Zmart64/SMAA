@@ -83,7 +83,6 @@ public class SMAATool {
      **/
     private void onStart() {
         try {
-
             String sourcePath = sourceTextField.getText();
             AGG agg = new AGG(sourcePath);
             double[][] raiTable = Utils.calculateRAI(agg, 10000);
@@ -92,8 +91,17 @@ public class SMAATool {
                     : sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('\\') + 1);
             String pathToFile = targetTextField.getText() + "/output_" + fileName;
 
+
+            String open = isMac ? "open " + targetTextField.getText() : "Explorer.exe " + targetTextField.getText();
+
             Utils.exportCsv(raiTable, pathToFile);
-            JOptionPane.showMessageDialog(null, "Output saved at: " + pathToFile, "Success!", JOptionPane.INFORMATION_MESSAGE);
+
+            int choice =  JOptionPane.showConfirmDialog(null,
+                    "Output saved at: " + pathToFile + "\nDo you want to open the file in the File Explorer?", "Success!", JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                Runtime.getRuntime().exec(open);
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Check if your file is formatted properly and ensure that the given paths are valid.",
