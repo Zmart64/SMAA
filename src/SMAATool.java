@@ -97,7 +97,7 @@ public class SMAATool {
             Utils.exportCsv(raiTable, pathToFile);
 
             int choice =  JOptionPane.showConfirmDialog(null,
-                    "Output saved at: " + pathToFile + "\nDo you want to open the file in the File Explorer?", "Success!", JOptionPane.YES_NO_OPTION);
+                    "Output saved at: " + pathToFile + "\nDo you want to open the file in your File-Explorer?", "Success!", JOptionPane.YES_NO_OPTION);
 
             if (choice == JOptionPane.YES_OPTION) {
                 Runtime.getRuntime().exec(open);
