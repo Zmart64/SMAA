@@ -10,4 +10,9 @@ public class WrongFormatTest {
     public void testWrongFormat() throws FileNotFoundException {
         AGG test = new AGG("test/resources/scenario4_wrong_format.csv");
     }
+
+    @Test(expected = Exception.class)
+    public void testEmptyFile() throws FileNotFoundException {
+        AGG test = new AGG("test/resources/empty_file.csv");
+    }
 }
