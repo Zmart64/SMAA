@@ -120,7 +120,7 @@ public final class Utils {
     public static double[] calculateTotalPoints(double[][] raiTable) {
         double[] totalpoints = new double[raiTable.length];
         for (int alt = 0; alt < totalpoints.length; alt++) {
-            for (int rank = 0; rank < totalpoints.length && rank < 3; rank++) {
+            for (int rank = 0; rank < totalpoints.length /*&& rank < 3*/; rank++) {
                 //weight = length-(rank-1)
                 totalpoints[alt] += (totalpoints.length - rank) * raiTable[alt][rank];
             }

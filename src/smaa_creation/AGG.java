@@ -161,7 +161,6 @@ public class AGG {
 
     /**
      * filters all values out of the given line and replaces missing values with a default value (-1)
-     *
      * @return string, format(example): ;1.0;0.5;-1.0;
      */
     private String modifyString(String currentLine) {

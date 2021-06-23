@@ -1,6 +1,6 @@
 [
   {
-    "name": "fixed-values-agg.csv",
+    "name": "fixed_values_agg.csv",
     "ranking": [
       0,
       1,
@@ -123,7 +123,7 @@
     ]
   },
   {
-    "name": "small-fixed-agg.csv",
+    "name": "small_fixed_agg.csv",
     "ranking": [
       0,
       1,
@@ -162,7 +162,7 @@
     ]
   },
   {
-    "name": "medium-fixed-agg.csv",
+    "name": "medium_fixed_agg.csv",
     "ranking": [
       3,
       0,
