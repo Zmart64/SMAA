@@ -20,7 +20,7 @@ public class SMAATool {
     private JPanel mainPanel;
     private JLabel imgLabel;
     private final boolean isMac;
-    private static final String home = "user.home";
+    private static final String HOME = "user.home";
     ImageIcon imageTest1 = new ImageIcon("test/resources/Logo_ohneText.png");
 
     /**
@@ -46,9 +46,9 @@ public class SMAATool {
 
         isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
-            targetTextField.setText(System.getProperty(home) + "/Downloads");
+            targetTextField.setText(System.getProperty(HOME) + "/Downloads");
         } else {
-            targetTextField.setText(System.getProperty(home) + "\\Downloads");
+            targetTextField.setText(System.getProperty(HOME) + "\\Downloads");
         }
 
         browseSourceButton.addActionListener(actionEvent -> onBrowseSource());
@@ -122,7 +122,7 @@ public class SMAATool {
         String path = dialog.getDirectory() + dialog.getFile();
 
         if (path.contains("null") && fileOrDir.equals("dir")) {
-            path = System.getProperty(home) + "/Downloads";
+            path = System.getProperty(HOME) + "/Downloads";
         } else if (path.contains("null") && fileOrDir.equals("file")) {
             path = "";
         }
@@ -145,6 +145,6 @@ public class SMAATool {
             }
         }
 
-        return System.getProperty(home) + "\\Downloads";
+        return System.getProperty(HOME) + "\\Downloads";
     }
 }
