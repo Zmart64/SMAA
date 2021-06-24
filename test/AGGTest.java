@@ -8,25 +8,25 @@ import java.util.Arrays;
 public class AGGTest {
 
     //5 rows, 8 + 1 columns (8 alternatives, 1 for weights)
-    private final static String scenario1 = "test/resources/scenario_1.csv";
+    private static final String scenario1 = "test/resources/scenario_1.csv";
 
     //5 rows, 8 + 1 columns
     //two decisionmaker changed weightorder --> no impact on smaa.AGG
-    private final static String scenario2 = "test/resources/scenario_2.csv";
+    private static final String scenario2 = "test/resources/scenario_2.csv";
 
     //5 rows, 8 + 1 columns
     //three decisionmaker changed weightorder --> changes smaa.AGG
-    private final static String scenario3 = "test/resources/scenario_3.csv";
+    private static final String scenario3 = "test/resources/scenario_3.csv";
 
     //3 rows, 3 + 1 columns
-    private final static String scenario4 = "test/resources/scenario_4.csv";
+    private static final String scenario4 = "test/resources/scenario_4.csv";
 
     //3 rows, 3 + 1 columns
-    private final static String scenario5 = "test/resources/scenario_5.csv";
+    private static final String scenario5 = "test/resources/scenario_5.csv";
 
     //3 rows, 3 + 1 columns
     //5 decisionmaker changed weightorder --> same smaa.AGG as in scenario_4
-    private final static String scenario6 = "test/resources/scenario_6.csv";
+    private static final String scenario6 = "test/resources/scenario_6.csv";
 
     @Test
     public void testCSVToAGGScenario1() throws FileNotFoundException {
