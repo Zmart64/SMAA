@@ -110,7 +110,7 @@ public final class Utils {
 
 
     /**
-     * calculates totalpoints for each alternative, only ranks 1 to 3 are relevant
+     * calculates totalpoints for each alternative
      * lower ranks are not important enough
      * points(actually a percentage) on rank i is weighted with lastRank-i+1
      *
@@ -120,8 +120,7 @@ public final class Utils {
     public static double[] calculateTotalPoints(double[][] raiTable) {
         double[] totalpoints = new double[raiTable.length];
         for (int alt = 0; alt < totalpoints.length; alt++) {
-            for (int rank = 0; rank < totalpoints.length /*&& rank < 3*/; rank++) {
-                //weight = length-(rank-1)
+            for (int rank = 0; rank < totalpoints.length; rank++) {
                 totalpoints[alt] += (totalpoints.length - rank) * raiTable[alt][rank];
             }
         }
@@ -204,12 +203,13 @@ public final class Utils {
             writer.println("Due to very similar scores for all alternatives, no alternatives can be excluded.\n" +
                     "If possible, please re-evaluate your decisions and run the SMAA once again.");
         } else {
-            writer.print("The following alternatives should be discarded: ");
+            writer.println("The following alternatives should be discarded: ");
             writer.println();
             for (Integer discard : discards) {
-                writer.println(discard);
+                writer.println(";" + "a" + discard);
             }
         }
+        writer.println();
         writer.println();
     }
 
@@ -220,17 +220,10 @@ public final class Utils {
         double[] percentages = getPercentageDifferences(raiTable);
 
         writer.println("Percentage Differences (referring to the best alternative): ");
+        writer.println();
 
         for (int i = 0; i < percentages.length; i++) {
-            writer.print("a" + (i + 1));
-            if (i != percentages.length - 1)
-                writer.print(";");
-        }
-        writer.println();
-        for (int i = 0; i < percentages.length; i++) {
-            writer.print(percentages[i]);
-            if (i != percentages.length - 1)
-                writer.print(";");
+            writer.println(";a" + (i + 1) + ";" + percentages[i]);
         }
         writer.println();
 
@@ -242,9 +235,10 @@ public final class Utils {
     private static void printRaiTable(double[][] raiTable, PrintWriter writer) {
         writer.println();
         writer.println("Calculated RAIs:");
+        writer.println();
 
         //first row
-        writer.print("Rank;");
+        writer.print(";Rank;");
         for (int i = 0; i < raiTable[0].length; i++) {
             if (i < raiTable[0].length - 1)
                 writer.print("a" + (i + 1) + ";");
@@ -255,7 +249,7 @@ public final class Utils {
         //print all rai values per rank
         for (int rank = 0; rank < raiTable.length; rank++) {
             writer.println();
-            writer.print(rank + 1 + ";");
+            writer.print(";" + (rank + 1) + ";");
             for (int alt = 0; alt < raiTable[0].length; alt++) {
                 if (alt < raiTable[0].length - 1)
                     writer.print(String.valueOf(raiTable[alt][rank]).replace(".", ",") + ";");
