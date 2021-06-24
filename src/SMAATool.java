@@ -79,20 +79,21 @@ public class SMAATool {
     }
 
     /**
-     * performs SMAA and outputs file
+     * performs SMAA and outputs file, gives option to open File-Exporer at the output path
      **/
     private void onStart() {
         try {
             String sourcePath = sourceTextField.getText();
+            String outpath = targetTextField.getText();
             AGG agg = new AGG(sourcePath);
             double[][] raiTable = Utils.calculateRAI(agg, 10000);
 
-            String fileName = isMac ? sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('/') + 1)
-                    : sourceTextField.getText().substring(sourceTextField.getText().lastIndexOf('\\') + 1);
-            String pathToFile = targetTextField.getText() + "/output_" + fileName;
+            String fileName = isMac ? sourcePath.substring(sourcePath.lastIndexOf('/') + 1)
+                    : sourcePath.substring(sourcePath.lastIndexOf('\\') + 1);
+            String pathToFile = outpath + "/output_" + fileName;
 
 
-            String open = isMac ? "open " + targetTextField.getText() : "Explorer.exe " + targetTextField.getText();
+            String open = isMac ? "open " + outpath : "Explorer.exe " + outpath;
 
             Utils.exportCsv(raiTable, pathToFile);
 
