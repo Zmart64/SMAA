@@ -20,7 +20,7 @@ public class SMAATool {
     private JPanel mainPanel;
     private JLabel imgLabel;
     private final boolean isMac;
-    private final String home = "user.home";
+    private final static String home = "user.home";
     ImageIcon imageTest1 = new ImageIcon("test/resources/Logo_ohneText.png");
 
     /**

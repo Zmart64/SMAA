@@ -189,7 +189,7 @@ public class AGG {
     private double[] stringToDoubleArray(String modified) {
         modified = modified.replaceFirst(";", "");
 
-        //values are seperated by ;
+        //values are seperated by ";"
         String[] strArray = modified.split(";");
 
         //parse and store into doubleArray
