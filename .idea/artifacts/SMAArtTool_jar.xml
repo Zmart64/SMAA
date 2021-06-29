@@ -1,11 +1,11 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="SMAA:jar3">
-    <output-path>$PROJECT_DIR$/SMAA_jar/SMAAtest</output-path>
+  <artifact type="jar" name="SMAArtTool:jar">
+    <output-path>$PROJECT_DIR$/out</output-path>
     <root id="archive" name="SMAA.jar">
       <element id="module-output" name="SMAA" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jackson-core-2.9.8.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/jackson-databind-2.9.8.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/jackson-annotations-2.9.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jackson-core-2.9.8.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

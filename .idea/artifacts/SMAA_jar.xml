@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="SMAA:jar">
-    <output-path>$PROJECT_DIR$/SMAA_jar</output-path>
-    <root id="archive" name="SMAA.jar">
-      <element id="module-output" name="SMAA" />
-    </root>
-  </artifact>
-</component>

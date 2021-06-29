@@ -21,7 +21,6 @@ public class SMAATool {
     private JLabel imgLabel;
     private final boolean isMac;
     private static final String HOME = "user.home";
-    ImageIcon imageTest1 = new ImageIcon("test/resources/Logo_ohneText.png");
 
     /**
      * setting up Analyse Tool (no functionality)
@@ -42,7 +41,6 @@ public class SMAATool {
      * setting up functionality of Analyse-Tool
      */
     public SMAATool() {
-        imgLabel.setIcon(imageTest1);
 
         isMac = System.getProperty("os.name").contains("Mac");
         if (isMac) {
